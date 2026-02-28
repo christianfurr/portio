@@ -24,15 +24,6 @@ export function Contact() {
         </a>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <a
-            href="https://github.com/christianfurr"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-full border border-border bg-background-alt px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            aria-label="Christian Furr on GitHub"
-          >
-            GitHub
-          </a>
-          <a
             href="https://github.com/Stage-Link"
             target="_blank"
             rel="noopener noreferrer"

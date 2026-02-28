@@ -1,8 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
+  const pathname = usePathname();
+
+  const handleBrandClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <header
       className="fixed top-6 left-1/2 z-50 w-fit max-w-[min(90vw,40rem)] -translate-x-1/2"
@@ -13,7 +23,8 @@ export function Navbar() {
         aria-label="Main navigation"
       >
         <Link
-          href="#"
+          href="/"
+          onClick={handleBrandClick}
           className="text-lg font-semibold tracking-tight text-foreground transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           aria-label="Christian Furr, go to top"
         >
