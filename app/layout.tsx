@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { EasterEggsProvider } from "@/components/easter-eggs/EasterEggsProvider";
 import { defaultSeo, siteUrl } from "@/lib/seo";
 import "./globals.css";
@@ -88,6 +89,7 @@ export default function RootLayout({
           aria-hidden
         />
         <EasterEggsProvider>{children}</EasterEggsProvider>
+        <Analytics />
       </body>
     </html>
   );
