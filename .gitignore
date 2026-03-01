@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# photography originals (masters); web-ready output lives in public/images/photography/
+/photography-src/
