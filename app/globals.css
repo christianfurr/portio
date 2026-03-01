@@ -7,6 +7,9 @@
   --foreground-muted: #a1a1a6;
   --border: #38383a;
   --accent: #0a84ff;
+  --glow-pink: #f472b6;
+  --glow-orange: #fb923c;
+  --glow-red: #f87171;
 }
 
 @theme inline {
@@ -16,6 +19,9 @@
   --color-foreground-muted: var(--foreground-muted);
   --color-border: var(--border);
   --color-accent: var(--accent);
+  --color-glow-pink: var(--glow-pink);
+  --color-glow-orange: var(--glow-orange);
+  --color-glow-red: var(--glow-red);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 

@@ -30,7 +30,7 @@ export function PortraitWithEgg() {
         <img
           src="/images/portrait.jpeg"
           alt="Christian Furr"
-          className="h-64 w-48 rounded-2xl border border-border object-cover shadow-sm md:h-80 md:w-56"
+          className="h-80 w-60 rounded-2xl border border-border object-cover shadow-sm md:h-[28rem] md:w-72"
           width={224}
           height={320}
         />

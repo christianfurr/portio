@@ -11,7 +11,11 @@ export function Hero() {
     >
       <div className="relative mx-auto w-full max-w-[1200px]">
         <div
-          className="absolute -left-20 top-1/2 h-[400px] w-[400px] -translate-y-1/2 rounded-full bg-accent/[0.08] blur-3xl"
+          className="absolute -left-20 top-1/2 h-[520px] w-[520px] -translate-y-1/2 rounded-full bg-accent/11 blur-3xl"
+          aria-hidden
+        />
+        <div
+          className="absolute right-0 top-1/3 h-[380px] w-[380px] -translate-y-1/2 rounded-full bg-glow-pink/16 blur-3xl"
           aria-hidden
         />
         <div className="relative max-w-3xl">

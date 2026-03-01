@@ -12,6 +12,20 @@ const GRAVITY = 0.4;
 const CANVAS_W = 320;
 const CANVAS_H = 200;
 
+function getCanvasPoint(
+  canvas: HTMLCanvasElement,
+  clientX: number,
+  clientY: number
+): { x: number; y: number } {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  return {
+    x: (clientX - rect.left) * scaleX,
+    y: (clientY - rect.top) * scaleY,
+  };
+}
+
 export function BYUShootModal({ onClose }: BYUShootModalProps) {
   const [ball, setBall] = useState<{
     x: number;
@@ -26,6 +40,45 @@ export function BYUShootModal({ onClose }: BYUShootModalProps) {
   const ballRef = useRef(ball);
   ballRef.current = ball;
 
+  const shoot = useCallback(
+    (fromX: number, fromY: number, toX: number, toY: number) => {
+      const dx = toX - fromX;
+      const dy = toY - fromY;
+      const mag = Math.min(Math.hypot(dx, dy) * 0.12, 12);
+      const angle = Math.atan2(dy, dx);
+      const vx = Math.cos(angle) * mag;
+      const vy = Math.sin(angle) * mag;
+      setBall({ x: fromX, y: fromY, vx, vy });
+      setMessage(null);
+    },
+    []
+  );
+
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLCanvasElement>) => {
+      if (ball) return;
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const { x, y } = getCanvasPoint(canvas, e.clientX, e.clientY);
+      if (y > CANVAS_H - 50) {
+        dragStart.current = { x, y };
+      }
+    },
+    [ball]
+  );
+
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent<HTMLCanvasElement>) => {
+      if (!dragStart.current || ball) return;
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const { x, y } = getCanvasPoint(canvas, e.clientX, e.clientY);
+      shoot(dragStart.current.x, dragStart.current.y, x, y);
+      dragStart.current = null;
+    },
+    [ball, shoot]
+  );
+
   useEffect(() => {
     if (!ball) return;
     let id: number;
@@ -38,7 +91,9 @@ export function BYUShootModal({ onClose }: BYUShootModalProps) {
       y += vy;
 
       const dist = Math.hypot(x - HOOP_CX, y - HOOP_CY);
-      if (dist < HOOP_R && y > HOOP_CY - 20) {
+      const inCircle = dist < HOOP_R;
+      const belowRim = y > HOOP_CY;
+      if (inCircle && belowRim && y < HOOP_CY + HOOP_R) {
         setScore((s) => s + 1);
         setMessage("Splash!");
         setTimeout(() => setMessage(null), 1500);
@@ -53,53 +108,13 @@ export function BYUShootModal({ onClose }: BYUShootModalProps) {
         return;
       }
 
-      const next = { x, y, vx: vx * 0.99, vy };
+      const next = { x, y, vx: vx * 0.998, vy };
       ballRef.current = next;
-      setBall(next);
       id = requestAnimationFrame(loop);
     };
     id = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(id);
   }, [ball]);
-
-  const shoot = useCallback(
-    (fromX: number, fromY: number, toX: number, toY: number) => {
-      const dx = toX - fromX;
-      const dy = toY - fromY;
-      const mag = Math.min(Math.hypot(dx, dy) * 0.15, 14);
-      const angle = Math.atan2(dy, dx);
-      const vx = Math.cos(angle) * mag;
-      const vy = Math.sin(angle) * mag;
-      setBall({ x: fromX, y: fromY, vx, vy });
-      setMessage(null);
-    },
-    []
-  );
-
-  const handlePointerDown = useCallback(
-    (e: React.PointerEvent) => {
-      if (ball) return;
-      const rect = e.currentTarget.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      if (y > CANVAS_H - 50) {
-        dragStart.current = { x, y };
-      }
-    },
-    [ball]
-  );
-
-  const handlePointerUp = useCallback(
-    (e: React.PointerEvent) => {
-      if (!dragStart.current || ball) return;
-      const rect = e.currentTarget.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      shoot(dragStart.current.x, dragStart.current.y, x, y);
-      dragStart.current = null;
-    },
-    [ball, shoot]
-  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -107,21 +122,43 @@ export function BYUShootModal({ onClose }: BYUShootModalProps) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const strokeColor =
+      typeof document !== "undefined"
+        ? (getComputedStyle(document.documentElement)
+            .getPropertyValue("--color-foreground")
+            .trim() || "#f5f5f7")
+        : "#f5f5f7";
+    const fillColor =
+      typeof document !== "undefined"
+        ? (getComputedStyle(document.documentElement)
+            .getPropertyValue("--color-accent")
+            .trim() || "#0a84ff")
+        : "#0a84ff";
+
     const draw = () => {
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
-      ctx.strokeStyle = "var(--color-foreground)";
+      ctx.strokeStyle = strokeColor;
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.arc(HOOP_CX, HOOP_CY, HOOP_R, 0, Math.PI);
       ctx.stroke();
-      if (ball) {
+      const b = ballRef.current;
+      if (b) {
         ctx.beginPath();
-        ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI * 2);
-        ctx.fillStyle = "var(--color-accent)";
+        ctx.arc(b.x, b.y, BALL_R, 0, Math.PI * 2);
+        ctx.fillStyle = fillColor;
         ctx.fill();
       }
     };
     draw();
+
+    let drawId: number;
+    const drawLoop = () => {
+      draw();
+      drawId = requestAnimationFrame(drawLoop);
+    };
+    drawId = requestAnimationFrame(drawLoop);
+    return () => cancelAnimationFrame(drawId);
   }, [ball]);
 
   return (

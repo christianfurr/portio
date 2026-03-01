@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "Page not found | Christian Furr",
+  description:
+    "The page you're looking for doesn't exist or has been moved. Back to Christian Furr's portfolio.",
+};
 
 export default function NotFound() {
   return (

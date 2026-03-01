@@ -2,10 +2,22 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="px-6 py-24 md:py-36"
+      className="relative px-6 py-24 md:py-36"
       aria-labelledby="contact-heading"
     >
-      <div className="mx-auto max-w-[1200px] text-center">
+      <div
+        className="absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/11 blur-3xl"
+        aria-hidden
+      />
+      <div
+        className="absolute left-1/3 top-1/2 h-[280px] w-[280px] -translate-y-1/2 rounded-full bg-glow-red/14 blur-3xl"
+        aria-hidden
+      />
+      <div
+        className="absolute right-1/4 top-1/2 h-[260px] w-[260px] -translate-y-1/2 rounded-full bg-glow-pink/12 blur-3xl"
+        aria-hidden
+      />
+      <div className="relative mx-auto max-w-[1200px] text-center">
         <h2
           id="contact-heading"
           className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl"

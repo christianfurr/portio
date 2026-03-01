@@ -41,10 +41,18 @@ export function Footer() {
 
   return (
     <footer
-      className="border-t border-border px-6 py-6 md:px-8"
+      className="relative border-t border-border px-6 py-6 md:px-8"
       role="contentinfo"
     >
-      <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 sm:flex-row">
+      <div
+        className="absolute bottom-0 left-1/4 h-[280px] w-[280px] -translate-x-1/2 rounded-full bg-accent/7 blur-3xl"
+        aria-hidden
+      />
+      <div
+        className="absolute bottom-0 right-1/3 h-[220px] w-[220px] rounded-full bg-glow-orange/10 blur-3xl"
+        aria-hidden
+      />
+      <div className="relative mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 sm:flex-row">
         <div className="flex items-center gap-1">
           <button
             type="button"

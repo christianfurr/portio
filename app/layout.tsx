@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { EasterEggsProvider } from "@/components/easter-eggs/EasterEggsProvider";
+import { defaultSeo, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 const inter = Inter({
@@ -9,9 +10,30 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Christian Furr — Full Stack Developer",
-  description:
-    "I build real-time systems and beautifully crafted web experiences.",
+  metadataBase: new URL(siteUrl),
+  title: defaultSeo.title,
+  description: defaultSeo.description,
+  keywords: [
+    "full stack developer",
+    "real-time systems",
+    "web development",
+    "Christian Furr",
+  ],
+  authors: [{ name: "Christian Furr", url: siteUrl }],
+  creator: "Christian Furr",
+  openGraph: {
+    type: "website",
+    locale: "en",
+    url: siteUrl,
+    siteName: defaultSeo.siteName,
+    title: defaultSeo.title,
+    description: defaultSeo.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: defaultSeo.title,
+    description: defaultSeo.description,
+  },
 };
 
 export default function RootLayout({
@@ -19,9 +41,37 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const personId = `${siteUrl}/#person`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": personId,
+        name: "Christian Furr",
+        url: siteUrl,
+        description: defaultSeo.description,
+        jobTitle: "Full Stack Developer",
+        sameAs: ["https://github.com/christianfurr"],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        url: siteUrl,
+        name: defaultSeo.siteName,
+        description: defaultSeo.description,
+        publisher: { "@id": personId },
+      },
+    ],
+  };
+
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <div
           dangerouslySetInnerHTML={{
             __html: "<!-- Try the Konami code or type snake. -->",

@@ -4,10 +4,18 @@ export function About() {
   return (
     <section
       id="about"
-      className="bg-background-alt px-6 py-24 md:py-36"
+      className="relative overflow-hidden bg-background-alt px-6 py-24 md:py-36"
       aria-labelledby="about-heading"
     >
-      <div className="mx-auto max-w-[1200px]">
+      <div
+        className="absolute -left-24 top-1/2 h-[480px] w-[480px] -translate-y-1/2 rounded-full bg-glow-pink/14 blur-3xl"
+        aria-hidden
+      />
+      <div
+        className="absolute -right-20 bottom-1/4 h-[360px] w-[360px] rounded-full bg-glow-orange/12 blur-3xl"
+        aria-hidden
+      />
+      <div className="relative mx-auto max-w-[1200px]">
         <div className="grid gap-12 md:grid-cols-2 md:items-center md:gap-16">
           <PortraitWithEgg />
           <div className="max-w-xl">
