@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import type { Project } from "@/data/projects";
+import { SpymastersTeaserModal } from "@/components/easter-eggs/SpymastersTeaserModal";
+import { StageLinkCurtain } from "@/components/easter-eggs/StageLinkCurtain";
+import { BYUShootModal } from "@/components/easter-eggs/BYUShootModal";
 
 type ProjectFeatureProps = {
   project: Project;
@@ -11,6 +15,15 @@ type ProjectFeatureProps = {
 
 export function ProjectFeature({ project, index }: ProjectFeatureProps) {
   const imageLeft = index === 1;
+  const [spyOpen, setSpyOpen] = useState(false);
+  const [curtainOpen, setCurtainOpen] = useState(false);
+  const [shootOpen, setShootOpen] = useState(false);
+
+  const handleImageDoubleClick = () => {
+    if (project.title === "Spymasters") setSpyOpen(true);
+    if (project.title === "StageLink") setCurtainOpen(true);
+    if (project.title === "BYU Basketball Roster") setShootOpen(true);
+  };
 
   return (
     <motion.article
@@ -71,6 +84,16 @@ export function ProjectFeature({ project, index }: ProjectFeatureProps) {
         <motion.div
           className="group overflow-hidden rounded-2xl shadow-2xl transition-shadow duration-200 group-hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.4)]"
           whileHover={{ y: -4, transition: { duration: 0.2 } }}
+          onDoubleClick={handleImageDoubleClick}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleImageDoubleClick();
+            }
+          }}
+          aria-label={`Double-click for ${project.title} easter egg`}
         >
           <Image
             src={project.image}
@@ -82,6 +105,16 @@ export function ProjectFeature({ project, index }: ProjectFeatureProps) {
           />
         </motion.div>
       </div>
+
+      {spyOpen && (
+        <SpymastersTeaserModal onClose={() => setSpyOpen(false)} />
+      )}
+      {curtainOpen && (
+        <StageLinkCurtain onClose={() => setCurtainOpen(false)} />
+      )}
+      {shootOpen && (
+        <BYUShootModal onClose={() => setShootOpen(false)} />
+      )}
     </motion.article>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { EasterEggsProvider } from "@/components/easter-eggs/EasterEggsProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,7 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
+        <div
+          dangerouslySetInnerHTML={{
+            __html: "<!-- Try the Konami code or type snake. -->",
+          }}
+          className="hidden"
+          aria-hidden
+        />
+        <EasterEggsProvider>{children}</EasterEggsProvider>
       </body>
     </html>
   );

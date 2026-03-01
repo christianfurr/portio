@@ -1,3 +1,5 @@
+import { PortraitWithEgg } from "@/components/easter-eggs/PortraitWithEgg";
+
 export function About() {
   return (
     <section
@@ -7,15 +9,7 @@ export function About() {
     >
       <div className="mx-auto max-w-[1200px]">
         <div className="grid gap-12 md:grid-cols-2 md:items-center md:gap-16">
-          <div className="flex justify-center md:justify-start">
-            <img
-              src="/images/portrait.jpeg"
-              alt="Christian Furr"
-              className="h-64 w-48 rounded-2xl border border-border object-cover shadow-sm md:h-80 md:w-56"
-              width={224}
-              height={320}
-            />
-          </div>
+          <PortraitWithEgg />
           <div className="max-w-xl">
             <h2
               id="about-heading"
