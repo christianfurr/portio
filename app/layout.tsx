@@ -21,6 +21,14 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Christian Furr", url: siteUrl }],
   creator: "Christian Furr",
+  icons: {
+    icon: "/icon",
+    apple: [
+      { url: "/apple-icon", sizes: "180x180", type: "image/png" },
+      { url: "/apple-icon", sizes: "152x152", type: "image/png" },
+      { url: "/apple-icon", sizes: "167x167", type: "image/png" },
+    ],
+  },
   openGraph: {
     type: "website",
     locale: "en",
