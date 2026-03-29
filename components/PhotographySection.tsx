@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { photographyImages } from "@/data/photography";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 const PREVIEW_COUNT = 6;
 
@@ -18,7 +21,20 @@ function getAspectClass(index: number) {
 }
 
 export function PhotographySection() {
-  const preview = photographyImages.slice(0, PREVIEW_COUNT);
+  const photosData = useQuery(api.photos.list);
+
+  // Filter out photos without URLs
+  const photos = (photosData ?? [])
+    .filter((p) => p.url !== null)
+    .map((p) => ({
+      _id: p._id,
+      url: p.url as string,
+      alt: p.alt,
+      caption: p.caption,
+    }));
+
+  const preview = photos.slice(0, PREVIEW_COUNT);
+  const isLoading = photosData === undefined;
 
   return (
     <section
@@ -42,17 +58,21 @@ export function PhotographySection() {
           Photography
         </h2>
         <p className="mt-4 max-w-xl text-foreground-muted leading-relaxed">
-          A selection of photos I’ve taken. I like to shoot landscapes, street,
+          A selection of photos I've taken. I like to shoot landscapes, street,
           and the occasional portrait.
         </p>
-        {preview.length > 0 ? (
+        {isLoading ? (
+          <div className="mt-12 flex justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-foreground-muted border-t-accent" />
+          </div>
+        ) : preview.length > 0 ? (
           <>
             <ul
               className="mt-12 columns-2 gap-3 sm:columns-3 md:gap-4 [&>li]:break-inside-avoid [&>li]:mb-3 md:[&>li]:mb-4"
               role="list"
             >
               {preview.map((img, index) => (
-                <li key={img.src}>
+                <li key={img._id}>
                   <Link
                     href="/photography"
                     className="block overflow-hidden rounded-lg border border-border transition-shadow hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
@@ -61,20 +81,21 @@ export function PhotographySection() {
                       className={`relative block w-full ${getAspectClass(index)}`}
                     >
                       <Image
-                        src={img.src}
+                        src={img.url}
                         alt={img.alt}
                         fill
                         className="object-cover"
                         sizes="(max-width: 640px) 50vw, 33vw"
+                        unoptimized
                       />
                     </span>
                   </Link>
                 </li>
               ))}
             </ul>
-            {photographyImages.length > PREVIEW_COUNT && (
+            {photos.length > PREVIEW_COUNT && (
               <p className="mt-4 text-sm text-foreground-muted">
-                and {photographyImages.length - PREVIEW_COUNT} more
+                and {photos.length - PREVIEW_COUNT} more
               </p>
             )}
             <Link
