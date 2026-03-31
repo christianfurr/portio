@@ -11,6 +11,7 @@ const navItems = [
   { href: "/dashboard", label: "Overview", exact: true },
   { href: "/dashboard/hero", label: "Hero" },
   { href: "/dashboard/about", label: "About" },
+  { href: "/dashboard/stage-crew", label: "Stage Crew" },
   { href: "/dashboard/projects", label: "Projects" },
   { href: "/dashboard/photos", label: "Photos" },
   { href: "/dashboard/contact", label: "Contact" },
@@ -121,7 +122,27 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <h1 className="text-xl font-semibold text-foreground">Welcome back</h1>
             <p className="text-sm text-foreground-muted mt-1">Enter your password to continue</p>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" autoComplete="on">
+            <div>
+              <label
+                htmlFor="username"
+                className="mb-2 block text-sm font-medium text-foreground-muted"
+              >
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                name="username"
+                autoComplete="username"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+                placeholder="Enter username"
+                autoFocus
+                style={{
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                }}
+              />
+            </div>
             <div>
               <label
                 htmlFor="password"
@@ -132,11 +153,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <input
                 id="password"
                 type="password"
+                name="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                 placeholder="Enter password"
-                autoFocus
                 style={{
                   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 }}

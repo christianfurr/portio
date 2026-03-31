@@ -17,6 +17,7 @@ import type * as photos from "../photos.js";
 import type * as projects from "../projects.js";
 import type * as seed from "../seed.js";
 import type * as siteSettings from "../siteSettings.js";
+import type * as stageCrew from "../stageCrew.js";
 
 import type {
   ApiFromModules,
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   projects: typeof projects;
   seed: typeof seed;
   siteSettings: typeof siteSettings;
+  stageCrew: typeof stageCrew;
 }>;
 
 /**

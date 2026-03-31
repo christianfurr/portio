@@ -449,9 +449,9 @@ export default function PhotosPage() {
                 Upload Queue ({uploadingFiles.length})
               </h3>
               {pendingCount > 0 && (
-                <Button onClick={startUploads} loading={isUploading} size="sm">
-                  Upload {pendingCount} {pendingCount === 1 ? "Photo" : "Photos"}
-                </Button>
+                 <Button onClick={startUploads} isLoading={isUploading} size="sm">
+                   Upload {pendingCount} {pendingCount === 1 ? "Photo" : "Photos"}
+                 </Button>
               )}
             </div>
 

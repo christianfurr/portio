@@ -61,6 +61,36 @@ export default defineSchema({
     ),
   }),
 
+  // Stage crew experience (single document)
+  stageCrew: defineTable({
+    heading: v.string(),
+    bio: v.string(),
+    roles: v.array(
+      v.object({
+        role: v.string(),
+        description: v.string(),
+      })
+    ),
+    shows: v.array(
+      v.object({
+        title: v.string(),
+        role: v.string(),
+      })
+    ),
+    equipment: v.array(
+      v.object({
+        name: v.string(),
+        category: v.string(),
+      })
+    ),
+    software: v.array(
+      v.object({
+        name: v.string(),
+        proficiency: v.string(), // "pro" | "familiar"
+      })
+    ),
+  }),
+
   // Activity log - tracks all content changes and uploads
   activityLog: defineTable({
     type: v.string(), // "photo_upload", "project_created", "hero_updated", etc.
