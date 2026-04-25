@@ -12,6 +12,7 @@ type Photo = {
   url: string | null;
   alt: string;
   caption?: string;
+  blurDataUrl?: string;
 };
 
 function PhotographyLightbox({
@@ -28,9 +29,9 @@ function PhotographyLightbox({
   onNext: () => void;
 }) {
   const img = images[currentIndex];
-  if (!img || !img.url) return null;
 
   useEffect(() => {
+    if (!img || !img.url) return;
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") onPrev();
@@ -38,7 +39,9 @@ function PhotographyLightbox({
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [onClose, onPrev, onNext]);
+  }, [img, onClose, onPrev, onNext]);
+
+  if (!img || !img.url) return null;
 
   return (
     <div
@@ -112,6 +115,7 @@ export default function PhotographyPage() {
       url: p.url as string,
       alt: p.alt,
       caption: p.caption,
+      blurDataUrl: p.blurDataUrl,
     }));
 
   const openLightbox = useCallback((index: number) => {
@@ -152,7 +156,7 @@ export default function PhotographyPage() {
             Photography
           </h1>
           <p className="mt-4 max-w-xl text-foreground-muted leading-relaxed">
-            A selection of photos I've taken.
+            A selection of photos I&apos;ve taken.
           </p>
           {isLoading ? (
             <div className="mt-12 flex justify-center">
@@ -189,6 +193,9 @@ export default function PhotographyPage() {
                         className="object-cover"
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                         unoptimized
+                        {...(img.blurDataUrl
+                          ? { placeholder: "blur", blurDataURL: img.blurDataUrl }
+                          : {})}
                       />
                     </span>
                     {img.caption && (

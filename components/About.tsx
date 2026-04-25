@@ -3,11 +3,11 @@
 import { PortraitWithEgg } from "@/components/easter-eggs/PortraitWithEgg";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import ReactMarkdown from "react-markdown";
 
 export function About() {
   const about = useQuery(api.about.get);
 
-  // Show loading or fallback while data loads
   if (!about) {
     return (
       <section
@@ -30,6 +30,9 @@ export function About() {
       </section>
     );
   }
+
+  // Section hidden by admin
+  if (about.isDraft) return null;
 
   return (
     <section
@@ -55,9 +58,33 @@ export function About() {
             >
               {about.heading}
             </h2>
-            <p className="mt-4 text-foreground-muted leading-relaxed">
-              {about.bio}
-            </p>
+            <div className="mt-4 text-foreground-muted leading-relaxed prose prose-invert max-w-none">
+              <ReactMarkdown
+                components={{
+                  a: ({ href, children }) => (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent hover:underline"
+                    >
+                      {children}
+                    </a>
+                  ),
+                  p: ({ children }) => (
+                    <p className="text-foreground-muted leading-relaxed mb-3 last:mb-0">{children}</p>
+                  ),
+                  strong: ({ children }) => (
+                    <strong className="text-foreground font-semibold">{children}</strong>
+                  ),
+                  em: ({ children }) => (
+                    <em className="italic">{children}</em>
+                  ),
+                }}
+              >
+                {about.bio}
+              </ReactMarkdown>
+            </div>
             {about.currentlyBuilding.length > 0 && (
               <div className="mt-8">
                 <h3 className="text-sm font-medium uppercase tracking-wider text-foreground-muted">

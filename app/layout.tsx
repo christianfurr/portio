@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { EasterEggsProvider } from "@/components/easter-eggs/EasterEggsProvider";
 import { ConvexClientProvider } from "./ConvexClientProvider";
+import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { defaultSeo, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
@@ -89,9 +90,11 @@ export default function RootLayout({
           className="hidden"
           aria-hidden
         />
-        <ConvexClientProvider>
-          <EasterEggsProvider>{children}</EasterEggsProvider>
-        </ConvexClientProvider>
+        <ConvexAuthNextjsServerProvider>
+          <ConvexClientProvider>
+            <EasterEggsProvider>{children}</EasterEggsProvider>
+          </ConvexClientProvider>
+        </ConvexAuthNextjsServerProvider>
         <Analytics />
       </body>
     </html>

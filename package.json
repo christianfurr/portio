@@ -11,6 +11,8 @@
     "migrate-photos": "bun run scripts/migrate-photos.ts"
   },
   "dependencies": {
+    "@auth/core": "0.37.0",
+    "@convex-dev/auth": "^0.0.91",
     "@fontsource/manufacturing-consent": "^5.2.2",
     "@vercel/analytics": "^1.6.1",
     "canvas-confetti": "^1.9.4",
@@ -19,7 +21,8 @@
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-easy-crop": "^5.5.7"
+    "react-easy-crop": "^5.5.7",
+    "react-markdown": "8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

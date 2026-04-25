@@ -1,10 +1,8 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { logActivity } from "./lib/activity";
+import { requireAuth } from "./lib/auth";
 
-/**
- * Get site settings
- */
 export const get = query({
   args: {},
   handler: async (ctx) => {
@@ -13,9 +11,6 @@ export const get = query({
   },
 });
 
-/**
- * Update or create site settings
- */
 export const upsert = mutation({
   args: {
     siteName: v.string(),
@@ -30,12 +25,12 @@ export const upsert = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    await requireAuth(ctx);
     const existing = await ctx.db.query("siteSettings").first();
 
     if (existing) {
       await ctx.db.patch(existing._id, args);
       
-      // Log the activity
       await logActivity(ctx, {
         type: "settings_updated",
         entityType: "siteSettings",
@@ -47,7 +42,6 @@ export const upsert = mutation({
     } else {
       const id = await ctx.db.insert("siteSettings", args);
       
-      // Log the activity
       await logActivity(ctx, {
         type: "settings_created",
         entityType: "siteSettings",

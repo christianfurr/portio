@@ -15,6 +15,7 @@ interface HeroForm {
   ctaPrimaryLink: string;
   ctaSecondaryText: string;
   ctaSecondaryLink: string;
+  isDraft: boolean;
 }
 
 const emptyForm: HeroForm = {
@@ -25,6 +26,7 @@ const emptyForm: HeroForm = {
   ctaPrimaryLink: "",
   ctaSecondaryText: "",
   ctaSecondaryLink: "",
+  isDraft: false,
 };
 
 // Helper to create cropped image blob
@@ -107,6 +109,7 @@ export default function HeroPage() {
         ctaPrimaryLink: hero.ctaPrimaryLink,
         ctaSecondaryText: hero.ctaSecondaryText,
         ctaSecondaryLink: hero.ctaSecondaryLink,
+        isDraft: hero.isDraft ?? false,
       });
     }
   }, [hero]);
@@ -547,19 +550,31 @@ export default function HeroPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4 border-t border-border pt-6">
-          <button
-            type="submit"
-            disabled={isSubmitting || !hasChanges}
-            className="rounded-lg bg-accent px-6 py-2 font-medium text-white hover:bg-accent/90 disabled:opacity-50"
-          >
-            {isSubmitting ? "Saving..." : "Save Changes"}
-          </button>
-          {hasChanges && (
-            <span className="text-sm text-foreground-muted">
-              You have unsaved changes
-            </span>
-          )}
+        <div className="border-t border-border pt-6 space-y-4">
+          <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={form.isDraft}
+              onChange={(e) => {
+                setForm((prev) => ({ ...prev, isDraft: e.target.checked }));
+                setHasChanges(true);
+                setSavedMessage(false);
+              }}
+              style={{ width: "16px", height: "16px", accentColor: "var(--accent)" }}
+            />
+            <span className="text-sm font-medium text-foreground">Save as draft</span>
+            <span className="text-xs text-foreground-muted">(hides this section from your public site)</span>
+          </label>
+          <div className="flex items-center gap-4">
+            <button
+              type="submit"
+              disabled={isSubmitting || !hasChanges}
+              className="rounded-lg bg-accent px-6 py-2 font-medium text-white hover:bg-accent/90 disabled:opacity-50"
+            >
+              {isSubmitting ? "Saving..." : "Save Changes"}
+            </button>
+            {hasChanges && <span className="text-sm text-foreground-muted">You have unsaved changes</span>}
+          </div>
         </div>
       </form>
     </div>

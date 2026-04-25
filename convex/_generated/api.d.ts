@@ -10,12 +10,16 @@
 
 import type * as about from "../about.js";
 import type * as analytics from "../analytics.js";
+import type * as auth from "../auth.js";
 import type * as contact from "../contact.js";
 import type * as hero from "../hero.js";
+import type * as http from "../http.js";
 import type * as lib_activity from "../lib/activity.js";
+import type * as lib_auth from "../lib/auth.js";
 import type * as photos from "../photos.js";
 import type * as projects from "../projects.js";
 import type * as seed from "../seed.js";
+import type * as sessions from "../sessions.js";
 import type * as siteSettings from "../siteSettings.js";
 import type * as stageCrew from "../stageCrew.js";
 
@@ -28,12 +32,16 @@ import type {
 declare const fullApi: ApiFromModules<{
   about: typeof about;
   analytics: typeof analytics;
+  auth: typeof auth;
   contact: typeof contact;
   hero: typeof hero;
+  http: typeof http;
   "lib/activity": typeof lib_activity;
+  "lib/auth": typeof lib_auth;
   photos: typeof photos;
   projects: typeof projects;
   seed: typeof seed;
+  sessions: typeof sessions;
   siteSettings: typeof siteSettings;
   stageCrew: typeof stageCrew;
 }>;

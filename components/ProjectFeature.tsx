@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import ReactMarkdown from "react-markdown";
 import type { Project } from "@/data/projects";
 import { SpymastersTeaserModal } from "@/components/easter-eggs/SpymastersTeaserModal";
 import { StageLinkCurtain } from "@/components/easter-eggs/StageLinkCurtain";
@@ -40,9 +41,21 @@ export function ProjectFeature({ project, index }: ProjectFeatureProps) {
         <h3 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
           {project.title}
         </h3>
-        <p className="mt-3 max-w-xl text-foreground-muted leading-relaxed">
-          {project.description}
-        </p>
+        <div className="mt-3 max-w-xl text-foreground-muted leading-relaxed">
+          <ReactMarkdown
+            components={{
+              a: ({ href, children }) => (
+                <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">
+                  {children}
+                </a>
+              ),
+              p: ({ children }) => <p className="text-foreground-muted leading-relaxed mb-2 last:mb-0">{children}</p>,
+              strong: ({ children }) => <strong className="text-foreground font-semibold">{children}</strong>,
+            }}
+          >
+            {project.description}
+          </ReactMarkdown>
+        </div>
         <div className="mt-4 flex flex-wrap gap-2">
           {project.techStack.map((tech) => (
             <span

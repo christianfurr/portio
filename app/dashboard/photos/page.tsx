@@ -9,6 +9,7 @@ import {
   isValidImageType,
   formatFileSize,
 } from "@/lib/image-optimization";
+import { generateBlurDataUrl } from "@/lib/blur-placeholder";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/dashboard/Button";
 import { Input } from "@/components/dashboard/Input";
@@ -39,7 +40,7 @@ function formatDate(timestamp: number): string {
 }
 
 export default function PhotosPage() {
-  const photos = useQuery(api.photos.list);
+  const photos = useQuery(api.photos.list, { showDrafts: true });
   const generateUploadUrl = useMutation(api.photos.generateUploadUrl);
   const createPhoto = useMutation(api.photos.create);
   const updatePhoto = useMutation(api.photos.update);
@@ -51,7 +52,7 @@ export default function PhotosPage() {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [editingId, setEditingId] = useState<Id<"photos"> | null>(null);
-  const [editForm, setEditForm] = useState({ alt: "", caption: "" });
+  const [editForm, setEditForm] = useState({ alt: "", caption: "", isDraft: false });
   const [reoptimizing, setReoptimizing] = useState<Set<string>>(new Set());
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -113,6 +114,10 @@ export default function PhotosPage() {
 
       try {
         updateFile({ status: "optimizing", progress: 10 });
+
+        // Generate blur placeholder from original file before optimization
+        const blurDataUrl = await generateBlurDataUrl(uploadingFile.file).catch(() => undefined);
+
         const optimized = await optimizeImage(uploadingFile.file, {
           maxWidth: 1600,
           maxHeight: 1600,
@@ -143,6 +148,7 @@ export default function PhotosPage() {
           storageId,
           alt: uploadingFile.alt || "Photo",
           caption: uploadingFile.caption || undefined,
+          blurDataUrl,
         });
 
         updateFile({ status: "done", progress: 100 });
@@ -246,7 +252,7 @@ export default function PhotosPage() {
 
   const startEdit = (photo: NonNullable<typeof photos>[number]) => {
     setEditingId(photo._id);
-    setEditForm({ alt: photo.alt, caption: photo.caption || "" });
+    setEditForm({ alt: photo.alt, caption: photo.caption || "", isDraft: photo.isDraft ?? false });
   };
 
   const saveEdit = async () => {
@@ -256,6 +262,7 @@ export default function PhotosPage() {
         id: editingId,
         alt: editForm.alt,
         caption: editForm.caption || undefined,
+        isDraft: editForm.isDraft,
       });
       toast.success("Photo updated", "Changes saved successfully");
       setEditingId(null);
@@ -266,7 +273,7 @@ export default function PhotosPage() {
 
   const cancelEdit = () => {
     setEditingId(null);
-    setEditForm({ alt: "", caption: "" });
+    setEditForm({ alt: "", caption: "", isDraft: false });
   };
 
   const deletePhoto = async (id: Id<"photos">) => {
@@ -739,8 +746,8 @@ interface PhotoCardProps {
   index: number;
   totalPhotos: number;
   isEditing: boolean;
-  editForm: { alt: string; caption: string };
-  setEditForm: (form: { alt: string; caption: string }) => void;
+  editForm: { alt: string; caption: string; isDraft: boolean };
+  setEditForm: (form: { alt: string; caption: string; isDraft: boolean }) => void;
   onStartEdit: () => void;
   onSaveEdit: () => void;
   onCancelEdit: () => void;
@@ -833,6 +840,15 @@ function PhotoCard({
               onChange={(e) => setEditForm({ ...editForm, caption: e.target.value })}
               placeholder="Caption"
             />
+            <label style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", fontSize: "12px", color: "var(--muted)" }}>
+              <input
+                type="checkbox"
+                checked={editForm.isDraft}
+                onChange={(e) => setEditForm({ ...editForm, isDraft: e.target.checked })}
+                style={{ width: "14px", height: "14px", accentColor: "var(--accent)" }}
+              />
+              Hide from public (draft)
+            </label>
             <div style={{ display: "flex", gap: "8px" }}>
               <Button size="sm" onClick={onSaveEdit}>Save</Button>
               <Button size="sm" variant="secondary" onClick={onCancelEdit}>Cancel</Button>
@@ -854,9 +870,16 @@ function PhotoCard({
           </div>
         ) : (
           <>
-            <p style={{ fontSize: "14px", fontWeight: 500, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {photo.alt}
-            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <p style={{ fontSize: "14px", fontWeight: 500, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>
+                {photo.alt}
+              </p>
+              {photo.isDraft && (
+                <span style={{ flexShrink: 0, padding: "2px 6px", borderRadius: "4px", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)", color: "#f59e0b", fontSize: "10px", fontWeight: 500 }}>
+                  Draft
+                </span>
+              )}
+            </div>
             {photo.caption && (
               <p style={{ fontSize: "12px", color: "var(--muted)", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {photo.caption}

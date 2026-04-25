@@ -1,13 +1,17 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { authTables } from "@convex-dev/auth/server";
 
 export default defineSchema({
+  ...authTables,
   // Photography gallery
   photos: defineTable({
     storageId: v.id("_storage"),
     alt: v.string(),
     caption: v.optional(v.string()),
     order: v.number(),
+    isDraft: v.optional(v.boolean()),
+    blurDataUrl: v.optional(v.string()),
   }).index("by_order", ["order"]),
 
   // Projects showcase
@@ -19,6 +23,7 @@ export default defineSchema({
     techStack: v.array(v.string()),
     imageStorageId: v.optional(v.id("_storage")),
     order: v.number(),
+    isDraft: v.optional(v.boolean()),
   }).index("by_order", ["order"]),
 
   // Hero section content (single document)
@@ -31,6 +36,7 @@ export default defineSchema({
     ctaSecondaryText: v.string(),
     ctaSecondaryLink: v.string(),
     portraitStorageId: v.optional(v.id("_storage")),
+    isDraft: v.optional(v.boolean()),
   }),
 
   // About section content (single document)
@@ -39,12 +45,14 @@ export default defineSchema({
     bio: v.string(),
     currentlyBuildingHeading: v.string(),
     currentlyBuilding: v.array(v.string()),
+    isDraft: v.optional(v.boolean()),
   }),
 
   // Contact section content (single document)
   contact: defineTable({
     heading: v.string(),
     subtext: v.string(),
+    isDraft: v.optional(v.boolean()),
   }),
 
   // Site-wide settings (single document)
@@ -89,6 +97,7 @@ export default defineSchema({
         proficiency: v.string(), // "pro" | "familiar"
       })
     ),
+    isDraft: v.optional(v.boolean()),
   }),
 
   // Activity log - tracks all content changes and uploads

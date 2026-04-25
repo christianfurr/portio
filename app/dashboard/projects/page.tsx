@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
+import ReactMarkdown from "react-markdown";
 import {
   optimizeImage,
   isValidImageType,
@@ -16,6 +17,7 @@ interface ProjectForm {
   liveUrl: string;
   sourceUrl: string;
   techStack: string;
+  isDraft: boolean;
 }
 
 const emptyForm: ProjectForm = {
@@ -24,10 +26,12 @@ const emptyForm: ProjectForm = {
   liveUrl: "",
   sourceUrl: "",
   techStack: "",
+  isDraft: false,
 };
 
 export default function ProjectsPage() {
-  const projects = useQuery(api.projects.list);
+  const projects = useQuery(api.projects.list, { showDrafts: true });
+  const [descTab, setDescTab] = useState<"write" | "preview">("write");
   const generateUploadUrl = useMutation(api.projects.generateUploadUrl);
   const createProject = useMutation(api.projects.create);
   const updateProject = useMutation(api.projects.update);
@@ -113,6 +117,7 @@ export default function ProjectsPage() {
         sourceUrl: form.sourceUrl || undefined,
         techStack: form.techStack.split(",").map((t) => t.trim()).filter(Boolean),
         imageStorageId,
+        isDraft: form.isDraft,
       });
 
       setForm(emptyForm);
@@ -135,6 +140,7 @@ export default function ProjectsPage() {
       liveUrl: project.liveUrl,
       sourceUrl: project.sourceUrl || "",
       techStack: project.techStack.join(", "),
+      isDraft: project.isDraft ?? false,
     });
   };
 
@@ -152,6 +158,7 @@ export default function ProjectsPage() {
         liveUrl: form.liveUrl,
         sourceUrl: form.sourceUrl || undefined,
         techStack: form.techStack.split(",").map((t) => t.trim()).filter(Boolean),
+        isDraft: form.isDraft,
       });
 
       setForm(emptyForm);
@@ -251,16 +258,67 @@ export default function ProjectsPage() {
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1 block text-sm text-foreground-muted">
-                Description *
-              </label>
-              <textarea
-                value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
-                required
-                rows={3}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-              />
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-sm text-foreground-muted">Description * (Markdown supported)</label>
+                <div style={{ display: "flex", gap: "2px", background: "var(--border)", borderRadius: "8px", padding: "2px" }}>
+                  {(["write", "preview"] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => setDescTab(tab)}
+                      style={{
+                        padding: "3px 10px",
+                        borderRadius: "6px",
+                        fontSize: "11px",
+                        fontWeight: 500,
+                        background: descTab === tab ? "var(--card)" : "transparent",
+                        color: descTab === tab ? "var(--foreground)" : "var(--muted)",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {tab === "write" ? "Write" : "Preview"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {descTab === "write" ? (
+                <textarea
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  required
+                  rows={4}
+                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent font-mono text-sm"
+                />
+              ) : (
+                <div
+                  style={{
+                    minHeight: "80px",
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                    background: "var(--background)",
+                    color: "var(--foreground)",
+                    fontSize: "14px",
+                    lineHeight: "1.6",
+                  }}
+                >
+                  {form.description ? (
+                    <ReactMarkdown
+                      components={{
+                        a: ({ href, children }) => (
+                          <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>{children}</a>
+                        ),
+                        p: ({ children }) => <p style={{ marginBottom: "8px" }}>{children}</p>,
+                      }}
+                    >
+                      {form.description}
+                    </ReactMarkdown>
+                  ) : (
+                    <span style={{ color: "var(--muted)" }}>Nothing to preview.</span>
+                  )}
+                </div>
+              )}
             </div>
             <div>
               <label className="mb-1 block text-sm text-foreground-muted">
@@ -342,7 +400,18 @@ export default function ProjectsPage() {
               </div>
             )}
           </div>
-          <div className="mt-6 flex gap-3">
+          <div className="mt-4">
+            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                checked={form.isDraft}
+                onChange={(e) => setForm({ ...form, isDraft: e.target.checked })}
+                style={{ width: "15px", height: "15px", accentColor: "var(--accent)" }}
+              />
+              <span className="text-sm text-foreground-muted">Save as draft (hide from public)</span>
+            </label>
+          </div>
+          <div className="mt-4 flex gap-3">
             <button
               type="submit"
               disabled={isSubmitting}
@@ -399,7 +468,14 @@ export default function ProjectsPage() {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-foreground">{project.title}</h4>
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-medium text-foreground">{project.title}</h4>
+                    {project.isDraft && (
+                      <span style={{ padding: "2px 8px", borderRadius: "4px", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)", color: "#f59e0b", fontSize: "11px", fontWeight: 500 }}>
+                        Draft
+                      </span>
+                    )}
+                  </div>
                   <p className="mt-1 text-sm text-foreground-muted line-clamp-2">
                     {project.description}
                   </p>

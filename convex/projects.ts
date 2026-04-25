@@ -1,22 +1,25 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { logActivity } from "./lib/activity";
+import { requireAuth } from "./lib/auth";
 
-/**
- * List all projects ordered by their order field
- */
 export const list = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    showDrafts: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
     const projects = await ctx.db
       .query("projects")
       .withIndex("by_order")
       .order("asc")
       .collect();
 
-    // Get image URLs for each project
-    const projectsWithImages = await Promise.all(
-      projects.map(async (project) => {
+    const filtered = args.showDrafts
+      ? projects
+      : projects.filter((p) => !p.isDraft);
+
+    return await Promise.all(
+      filtered.map(async (project) => {
         let imageUrl: string | null = null;
         let imageSize: number | null = null;
         let imageContentType: string | null = null;
@@ -28,22 +31,12 @@ export const list = query({
           imageContentType = metadata?.contentType ?? null;
         }
 
-        return {
-          ...project,
-          imageUrl,
-          imageSize,
-          imageContentType,
-        };
+        return { ...project, imageUrl, imageSize, imageContentType };
       })
     );
-
-    return projectsWithImages;
   },
 });
 
-/**
- * Create a new project
- */
 export const create = mutation({
   args: {
     title: v.string(),
@@ -52,9 +45,11 @@ export const create = mutation({
     sourceUrl: v.optional(v.string()),
     techStack: v.array(v.string()),
     imageStorageId: v.optional(v.id("_storage")),
+    isDraft: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    // Get the highest order value and add 1
+    await requireAuth(ctx);
+
     const lastProject = await ctx.db
       .query("projects")
       .withIndex("by_order")
@@ -71,9 +66,9 @@ export const create = mutation({
       techStack: args.techStack,
       imageStorageId: args.imageStorageId,
       order,
+      isDraft: args.isDraft,
     });
 
-    // Log the activity
     await logActivity(ctx, {
       type: "project_created",
       entityType: "project",
@@ -86,9 +81,6 @@ export const create = mutation({
   },
 });
 
-/**
- * Update a project
- */
 export const update = mutation({
   args: {
     id: v.id("projects"),
@@ -97,12 +89,13 @@ export const update = mutation({
     liveUrl: v.string(),
     sourceUrl: v.optional(v.string()),
     techStack: v.array(v.string()),
+    isDraft: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    await requireAuth(ctx);
     const { id, ...fields } = args;
     await ctx.db.patch(id, fields);
 
-    // Log the activity
     await logActivity(ctx, {
       type: "project_updated",
       entityType: "project",
@@ -112,26 +105,18 @@ export const update = mutation({
   },
 });
 
-/**
- * Update a project's image
- */
 export const updateImage = mutation({
-  args: {
-    id: v.id("projects"),
-    imageStorageId: v.id("_storage"),
-  },
+  args: { id: v.id("projects"), imageStorageId: v.id("_storage") },
   handler: async (ctx, args) => {
+    await requireAuth(ctx);
     const project = await ctx.db.get(args.id);
     if (!project) throw new Error("Project not found");
 
-    // Delete old image if exists
     if (project.imageStorageId) {
       await ctx.storage.delete(project.imageStorageId);
     }
-
     await ctx.db.patch(args.id, { imageStorageId: args.imageStorageId });
 
-    // Log the activity
     await logActivity(ctx, {
       type: "project_image_updated",
       entityType: "project",
@@ -141,25 +126,18 @@ export const updateImage = mutation({
   },
 });
 
-/**
- * Delete a project and its image
- */
 export const remove = mutation({
-  args: {
-    id: v.id("projects"),
-  },
+  args: { id: v.id("projects") },
   handler: async (ctx, args) => {
+    await requireAuth(ctx);
     const project = await ctx.db.get(args.id);
     if (!project) throw new Error("Project not found");
 
-    // Delete the image from storage if exists
     if (project.imageStorageId) {
       await ctx.storage.delete(project.imageStorageId);
     }
-
     await ctx.db.delete(args.id);
 
-    // Log the activity
     await logActivity(ctx, {
       type: "project_deleted",
       entityType: "project",
@@ -169,19 +147,13 @@ export const remove = mutation({
   },
 });
 
-/**
- * Reorder projects
- */
 export const reorder = mutation({
-  args: {
-    projectIds: v.array(v.id("projects")),
-  },
+  args: { projectIds: v.array(v.id("projects")) },
   handler: async (ctx, args) => {
+    await requireAuth(ctx);
     for (let i = 0; i < args.projectIds.length; i++) {
       await ctx.db.patch(args.projectIds[i], { order: i });
     }
-
-    // Log the activity
     await logActivity(ctx, {
       type: "project_reorder",
       entityType: "project",
@@ -190,12 +162,10 @@ export const reorder = mutation({
   },
 });
 
-/**
- * Generate an upload URL for project images
- */
 export const generateUploadUrl = mutation({
   args: {},
   handler: async (ctx) => {
+    await requireAuth(ctx);
     return await ctx.storage.generateUploadUrl();
   },
 });
