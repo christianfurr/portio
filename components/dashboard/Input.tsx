@@ -26,7 +26,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={`
-            w-full rounded-xl border bg-background px-4 py-2.5 text-foreground
+            w-full rounded-xl border bg-background px-4 py-2.5 text-base text-foreground
             placeholder:text-foreground-muted/50
             transition-all duration-200
             focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent
@@ -73,7 +73,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={inputId}
           className={`
-            w-full rounded-xl border bg-background px-4 py-2.5 text-foreground
+            w-full rounded-xl border bg-background px-4 py-2.5 text-base text-foreground
             placeholder:text-foreground-muted/50
             transition-all duration-200
             focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent
@@ -122,7 +122,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={inputId}
           className={`
-            w-full rounded-xl border bg-background px-4 py-2.5 text-foreground
+            w-full rounded-xl border bg-background px-4 py-2.5 text-base text-foreground
             transition-all duration-200
             focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent
             hover:border-border/80
