@@ -6,6 +6,7 @@ import { StageCrew } from "@/components/StageCrew";
 import { PhotographySection } from "@/components/PhotographySection";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { AmbientOrbs } from "@/components/AmbientOrbs";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       >
         Skip to main content
       </a>
+      <AmbientOrbs />
       <Navbar />
       <main id="main">
         <Hero />

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
@@ -72,25 +73,36 @@ export function PhotographySection() {
               role="list"
             >
               {preview.map((img, index) => (
-                <li key={img._id}>
-                  <Link
-                    href="/photography"
-                    className="block overflow-hidden rounded-lg border border-border transition-shadow hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                <motion.li
+                  key={img._id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.45, delay: index * 0.05, ease: "easeOut" }}
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <span
-                      className={`relative block w-full ${getAspectClass(index)}`}
+                    <Link
+                      href="/photography"
+                      className="block overflow-hidden rounded-lg border border-border transition-shadow hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                     >
-                      <Image
-                        src={img.url}
-                        alt={img.alt}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 50vw, 33vw"
-                        unoptimized
-                      />
-                    </span>
-                  </Link>
-                </li>
+                      <span
+                        className={`relative block w-full ${getAspectClass(index)}`}
+                      >
+                        <Image
+                          src={img.url}
+                          alt={img.alt}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 50vw, 33vw"
+                          unoptimized
+                        />
+                      </span>
+                    </Link>
+                  </motion.div>
+                </motion.li>
               ))}
             </ul>
             {photos.length > PREVIEW_COUNT && (

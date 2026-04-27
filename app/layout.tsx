@@ -5,6 +5,9 @@ import { EasterEggsProvider } from "@/components/easter-eggs/EasterEggsProvider"
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { defaultSeo, siteUrl } from "@/lib/seo";
+import { SmoothScroll } from "@/components/SmoothScroll";
+import { Cursor } from "@/components/Cursor";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import "./globals.css";
 
 const inter = Inter({
@@ -84,23 +87,27 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <div
-          dangerouslySetInnerHTML={{
-            __html: "<!-- Try the Konami code or type snake. -->",
-          }}
-          className="hidden"
-          aria-hidden
-        />
-        <ConvexAuthNextjsServerProvider>
-          <ConvexClientProvider>
-            <EasterEggsProvider>{children}</EasterEggsProvider>
-          </ConvexClientProvider>
-        </ConvexAuthNextjsServerProvider>
-        <Analytics />
+        <SmoothScroll>
+          <Cursor />
+          <ScrollProgress />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: "<!-- Try the Konami code or type snake. -->",
+            }}
+            className="hidden"
+            aria-hidden
+          />
+          <ConvexAuthNextjsServerProvider>
+            <ConvexClientProvider>
+              <EasterEggsProvider>{children}</EasterEggsProvider>
+            </ConvexClientProvider>
+          </ConvexAuthNextjsServerProvider>
+          <Analytics />
+        </SmoothScroll>
       </body>
     </html>
   );

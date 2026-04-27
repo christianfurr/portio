@@ -41,6 +41,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Hide system cursor on fine-pointer devices — custom Cursor component takes over */
+@media (hover: hover) and (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

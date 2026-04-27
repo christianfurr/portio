@@ -3,26 +3,58 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useCallback, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll } from "framer-motion";
 
 const NAV_LINKS = [
-  { href: "#work", label: "Work" },
-  { href: "#about", label: "About" },
-  { href: "#stage-crew", label: "Stage" },
-  { href: "/photography", label: "Photography" },
-  { href: "#contact", label: "Contact" },
+  { href: "#work", label: "Work", sectionId: "work" },
+  { href: "#about", label: "About", sectionId: "about" },
+  { href: "#stage-crew", label: "Stage", sectionId: "stage-crew" },
+  { href: "/photography", label: "Photography", sectionId: null },
+  { href: "#contact", label: "Contact", sectionId: "contact" },
 ] as const;
 
 export function Navbar() {
   const pathname = usePathname();
   const [showTooltip, setShowTooltip] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { scrollY } = useScroll();
+
+  // Scroll-reactive background
+  useEffect(() => {
+    const unsubscribe = scrollY.on("change", (v) => setScrolled(v > 60));
+    return unsubscribe;
+  }, [scrollY]);
+
+  // Active section tracking
+  useEffect(() => {
+    if (pathname !== "/") return;
+    const sectionIds = NAV_LINKS.map((l) => l.sectionId).filter(Boolean) as string[];
+
+    const observers: IntersectionObserver[] = [];
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id);
+        },
+        { rootMargin: "-35% 0px -55% 0px" }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach((obs) => obs.disconnect());
+  }, [pathname]);
 
   const handleBrandClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname === "/") {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
+      setActiveSection(null);
     }
     setMobileOpen(false);
   };
@@ -56,8 +88,13 @@ export function Navbar() {
       className="fixed top-4 left-4 right-4 z-50 sm:top-6 sm:left-1/2 sm:right-auto sm:w-fit sm:max-w-[min(90vw,40rem)] sm:-translate-x-1/2"
       role="banner"
     >
-      <nav
-        className="flex h-12 items-center justify-between gap-4 rounded-full border border-border bg-black/20 px-4 py-3 backdrop-blur-xl backdrop-saturate-150 shadow-xl sm:gap-12 sm:px-8"
+      <motion.nav
+        className="flex h-12 items-center justify-between gap-4 rounded-full border px-4 py-3 backdrop-blur-xl backdrop-saturate-150 shadow-xl sm:gap-12 sm:px-8"
+        animate={{
+          backgroundColor: scrolled ? "rgba(0,0,0,0.75)" : "rgba(0,0,0,0.12)",
+          borderColor: scrolled ? "rgba(56,56,58,0.8)" : "rgba(56,56,58,0.3)",
+        }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
         aria-label="Main navigation"
       >
         <Link
@@ -86,16 +123,28 @@ export function Navbar() {
 
         {/* Desktop links */}
         <ul className="hidden items-center gap-8 sm:flex">
-          {NAV_LINKS.map(({ href, label }) => (
-            <li key={href}>
-              <Link
-                href={href}
-                className="text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
+          {NAV_LINKS.map(({ href, label, sectionId }) => {
+            const isActive = sectionId && activeSection === sectionId;
+            return (
+              <li key={href} className="relative">
+                <Link
+                  href={href}
+                  className={`text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+                    isActive ? "text-foreground" : "text-foreground-muted hover:text-foreground"
+                  }`}
+                >
+                  {label}
+                </Link>
+                {isActive && (
+                  <motion.span
+                    layoutId="navIndicator"
+                    className="absolute -bottom-0.5 left-0 right-0 h-px bg-accent"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+              </li>
+            );
+          })}
         </ul>
 
         {/* Mobile menu button */}
@@ -126,7 +175,7 @@ export function Navbar() {
             />
           </span>
         </button>
-      </nav>
+      </motion.nav>
 
       {/* Mobile dropdown */}
       <AnimatePresence>
@@ -139,7 +188,7 @@ export function Navbar() {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="overflow-hidden sm:hidden"
           >
-            <ul className="mt-2 flex flex-col gap-0 rounded-2xl border border-border bg-black/20 py-2 backdrop-blur-xl backdrop-saturate-150 shadow-xl">
+            <ul className="mt-2 flex flex-col gap-0 rounded-2xl border border-border bg-black/70 py-2 backdrop-blur-xl backdrop-saturate-150 shadow-xl">
               {NAV_LINKS.map(({ href, label }) => (
                 <li key={href}>
                   <Link

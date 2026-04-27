@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import type { Project } from "@/data/projects";
@@ -19,6 +19,24 @@ export function ProjectFeature({ project, index }: ProjectFeatureProps) {
   const [spyOpen, setSpyOpen] = useState(false);
   const [curtainOpen, setCurtainOpen] = useState(false);
   const [shootOpen, setShootOpen] = useState(false);
+
+  const rotX = useMotionValue(0);
+  const rotY = useMotionValue(0);
+  const springRotX = useSpring(rotX, { stiffness: 150, damping: 20 });
+  const springRotY = useSpring(rotY, { stiffness: 150, damping: 20 });
+
+  const handleTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const nx = (e.clientX - rect.left) / rect.width - 0.5;
+    const ny = (e.clientY - rect.top) / rect.height - 0.5;
+    rotX.set(-ny * 8);
+    rotY.set(nx * 8);
+  };
+
+  const handleTiltLeave = () => {
+    rotX.set(0);
+    rotY.set(0);
+  };
 
   const handleImageDoubleClick = () => {
     if (project.title === "Spymasters") setSpyOpen(true);
@@ -91,31 +109,44 @@ export function ProjectFeature({ project, index }: ProjectFeatureProps) {
       </div>
 
       {/* Image column */}
-      <div
-        className={`${imageLeft ? "md:order-1" : "md:order-2"}`}
-      >
+      <div className={`${imageLeft ? "md:order-1" : "md:order-2"}`}>
         <motion.div
-          className="group overflow-hidden rounded-2xl shadow-2xl transition-shadow duration-200 group-hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.4)]"
-          whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          onDoubleClick={handleImageDoubleClick}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleImageDoubleClick();
-            }
+          style={{
+            rotateX: springRotX,
+            rotateY: springRotY,
+            transformPerspective: 1200,
           }}
-          aria-label={`Double-click for ${project.title} easter egg`}
+          onMouseMove={handleTiltMove}
+          onMouseLeave={handleTiltLeave}
         >
-          <Image
-            src={project.image}
-            alt={`${project.title} screenshot`}
-            width={1200}
-            height={800}
-            className="w-full rounded-2xl border border-border object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
+          <motion.div
+            className="group overflow-hidden rounded-2xl shadow-2xl"
+            whileHover={{ y: -6, boxShadow: "0 30px 60px -15px rgba(0,0,0,0.5)", transition: { duration: 0.2 } }}
+            onDoubleClick={handleImageDoubleClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleImageDoubleClick();
+              }
+            }}
+            aria-label={`Double-click for ${project.title} easter egg`}
+          >
+            <motion.div
+              className="overflow-hidden rounded-2xl"
+              whileHover={{ scale: 1.03, transition: { duration: 0.4 } }}
+            >
+              <Image
+                src={project.image}
+                alt={`${project.title} screenshot`}
+                width={1200}
+                height={800}
+                className="w-full rounded-2xl border border-border object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </motion.div>
+          </motion.div>
         </motion.div>
       </div>
 
