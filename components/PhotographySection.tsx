@@ -21,7 +21,7 @@ function getAspectClass(index: number) {
 }
 
 export function PhotographySection() {
-  const photosData = useQuery(api.photos.list);
+  const photosData = useQuery(api.photos.list, {});
 
   // Filter out photos without URLs
   const photos = (photosData ?? [])

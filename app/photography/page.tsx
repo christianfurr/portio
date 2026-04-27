@@ -104,7 +104,7 @@ function PhotographyLightbox({
 }
 
 export default function PhotographyPage() {
-  const photosData = useQuery(api.photos.list);
+  const photosData = useQuery(api.photos.list, {});
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   // Filter out photos without URLs and cast to correct type

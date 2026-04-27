@@ -5,7 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { ProjectFeature } from "./ProjectFeature";
 
 export function Projects() {
-  const projects = useQuery(api.projects.list);
+  const projects = useQuery(api.projects.list, {});
 
   return (
     <section
