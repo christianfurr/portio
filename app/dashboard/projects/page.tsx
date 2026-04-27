@@ -306,10 +306,10 @@ export default function ProjectsPage() {
                   {form.description ? (
                     <ReactMarkdown
                       components={{
-                        a: (props) => (
-                          <a href={props.href} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>{props.children}</a>
+                        a: ({ href, children }: React.ComponentPropsWithoutRef<"a">) => (
+                          <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>{children}</a>
                         ),
-                        p: (props) => <p style={{ marginBottom: "8px" }}>{props.children}</p>,
+                        p: ({ children }: React.ComponentPropsWithoutRef<"p">) => <p style={{ marginBottom: "8px" }}>{children}</p>,
                       }}
                     >
                       {form.description}

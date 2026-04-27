@@ -44,13 +44,13 @@ export function ProjectFeature({ project, index }: ProjectFeatureProps) {
         <div className="mt-3 max-w-xl text-foreground-muted leading-relaxed">
           <ReactMarkdown
             components={{
-              a: (props) => (
-                <a href={props.href} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">
-                  {props.children}
+              a: ({ href, children }: React.ComponentPropsWithoutRef<"a">) => (
+                <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">
+                  {children}
                 </a>
               ),
-              p: (props) => <p className="text-foreground-muted leading-relaxed mb-2 last:mb-0">{props.children}</p>,
-              strong: (props) => <strong className="text-foreground font-semibold">{props.children}</strong>,
+              p: ({ children }: React.ComponentPropsWithoutRef<"p">) => <p className="text-foreground-muted leading-relaxed mb-2 last:mb-0">{children}</p>,
+              strong: ({ children }: React.ComponentPropsWithoutRef<"strong">) => <strong className="text-foreground font-semibold">{children}</strong>,
             }}
           >
             {project.description}
