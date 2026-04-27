@@ -174,13 +174,13 @@ export default function AboutPage() {
               {form.bio ? (
                 <ReactMarkdown
                   components={{
-                    a: ({ href, children }) => (
-                      <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>
-                        {children}
+                    a: (props) => (
+                      <a href={props.href} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)" }}>
+                        {props.children}
                       </a>
                     ),
-                    p: ({ children }) => <p style={{ marginBottom: "12px" }}>{children}</p>,
-                    strong: ({ children }) => <strong style={{ color: "var(--foreground)", fontWeight: 600 }}>{children}</strong>,
+                    p: (props) => <p style={{ marginBottom: "12px" }}>{props.children}</p>,
+                    strong: (props) => <strong style={{ color: "var(--foreground)", fontWeight: 600 }}>{props.children}</strong>,
                   }}
                 >
                   {form.bio}

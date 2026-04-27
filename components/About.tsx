@@ -61,24 +61,24 @@ export function About() {
             <div className="mt-4 text-foreground-muted leading-relaxed prose prose-invert max-w-none">
               <ReactMarkdown
                 components={{
-                  a: ({ href, children }) => (
+                  a: (props) => (
                     <a
-                      href={href}
+                      href={props.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-accent hover:underline"
                     >
-                      {children}
+                      {props.children}
                     </a>
                   ),
-                  p: ({ children }) => (
-                    <p className="text-foreground-muted leading-relaxed mb-3 last:mb-0">{children}</p>
+                  p: (props) => (
+                    <p className="text-foreground-muted leading-relaxed mb-3 last:mb-0">{props.children}</p>
                   ),
-                  strong: ({ children }) => (
-                    <strong className="text-foreground font-semibold">{children}</strong>
+                  strong: (props) => (
+                    <strong className="text-foreground font-semibold">{props.children}</strong>
                   ),
-                  em: ({ children }) => (
-                    <em className="italic">{children}</em>
+                  em: (props) => (
+                    <em className="italic">{props.children}</em>
                   ),
                 }}
               >
