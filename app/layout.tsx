@@ -5,6 +5,7 @@ import { EasterEggsProvider } from "@/components/easter-eggs/EasterEggsProvider"
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { defaultSeo, siteUrl } from "@/lib/seo";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import "./globals.css";
 
@@ -85,6 +86,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
+        <SmoothScroll>
         <ScrollProgress />
         <script
           type="application/ld+json"
@@ -103,6 +105,7 @@ export default function RootLayout({
           </ConvexClientProvider>
         </ConvexAuthNextjsServerProvider>
         <Analytics />
+        </SmoothScroll>
       </body>
     </html>
   );
