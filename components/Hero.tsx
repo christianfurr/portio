@@ -13,7 +13,7 @@ export function Hero() {
   if (!hero) {
     return (
       <section
-        className="relative flex min-h-[90vh] flex-col justify-center px-6 pb-32 pt-28 md:px-8"
+        className="relative flex min-h-[90vh] flex-col justify-center overflow-hidden px-6 pb-32 pt-28 md:px-8"
         aria-labelledby="hero-heading"
       >
         <div className="relative mx-auto w-full max-w-[1200px]">
@@ -30,7 +30,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative flex min-h-[90vh] flex-col justify-center px-6 pb-32 pt-28 md:px-8"
+      className="relative flex min-h-[90vh] flex-col justify-center overflow-hidden px-6 pb-32 pt-28 md:px-8"
       aria-labelledby="hero-heading"
     >
       <div className="relative mx-auto w-full max-w-[1200px]">

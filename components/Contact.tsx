@@ -12,7 +12,7 @@ export function Contact() {
     return (
       <section
         id="contact"
-        className="relative px-6 py-24 md:py-36"
+        className="relative overflow-hidden px-6 py-24 md:py-36"
         aria-labelledby="contact-heading"
       >
         <div className="relative mx-auto max-w-[1200px] text-center">
@@ -25,7 +25,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="relative px-6 py-24 md:py-36"
+      className="relative overflow-hidden px-6 py-24 md:py-36"
       aria-labelledby="contact-heading"
     >
       <div

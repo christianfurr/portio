@@ -10,7 +10,7 @@ export function Projects() {
   return (
     <section
       id="work"
-      className="relative px-6 pt-32 pb-24 md:pt-48 md:pb-36"
+      className="relative overflow-hidden px-6 pt-32 pb-24 md:pt-48 md:pb-36"
       aria-labelledby="work-heading"
     >
       <div
