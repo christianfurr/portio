@@ -53,11 +53,11 @@ export function Navbar() {
 
   return (
     <header
-      className="fixed top-4 left-4 right-4 z-50 sm:top-6 sm:left-1/2 sm:right-auto sm:w-fit sm:max-w-[min(90vw,40rem)] sm:-translate-x-1/2"
+      className="fixed top-4 left-4 right-4 z-50 sm:top-6 sm:left-1/2 sm:right-auto sm:w-fit sm:max-w-[min(94vw,46rem)] sm:-translate-x-1/2"
       role="banner"
     >
       <nav
-        className="flex h-11 items-center justify-between gap-4 rounded-full border border-border bg-black/20 px-4 py-2 backdrop-blur-xl backdrop-saturate-150 shadow-xl sm:h-12 sm:gap-12 sm:px-8 sm:py-3"
+        className="flex h-11 items-center justify-between gap-4 rounded-full border border-border bg-black/20 px-4 py-2 backdrop-blur-xl backdrop-saturate-150 shadow-xl sm:h-12 sm:gap-10 sm:px-8 sm:py-3"
         aria-label="Main navigation"
       >
         <Link
@@ -85,7 +85,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop links */}
-        <ul className="hidden items-center gap-8 sm:flex">
+        <ul className="hidden items-center gap-8 whitespace-nowrap sm:flex">
           {NAV_LINKS.map(({ href, label }) => (
             <li key={href}>
               <Link
