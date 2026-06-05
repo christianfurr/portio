@@ -41,7 +41,7 @@ export function Footer() {
 
   return (
     <footer
-      className="relative border-t border-border px-6 py-6 md:px-8"
+      className="relative overflow-hidden border-t border-border px-6 py-6 md:px-8"
       role="contentinfo"
     >
       <div
