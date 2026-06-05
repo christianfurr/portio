@@ -57,7 +57,7 @@ export function Navbar() {
       role="banner"
     >
       <nav
-        className="flex h-12 items-center justify-between gap-4 rounded-full border border-border bg-black/20 px-4 py-3 backdrop-blur-xl backdrop-saturate-150 shadow-xl sm:gap-12 sm:px-8"
+        className="flex h-11 items-center justify-between gap-4 rounded-full border border-border bg-black/20 px-4 py-2 backdrop-blur-xl backdrop-saturate-150 shadow-xl sm:h-12 sm:gap-12 sm:px-8 sm:py-3"
         aria-label="Main navigation"
       >
         <Link
@@ -65,7 +65,7 @@ export function Navbar() {
           onClick={handleBrandClick}
           onMouseEnter={handleBrandMouseEnter}
           onMouseLeave={handleBrandMouseLeave}
-          className="relative shrink-0 text-base font-semibold tracking-tight text-foreground transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:text-lg"
+          className="relative shrink-0 text-[15px] font-semibold tracking-tight text-foreground transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:text-lg"
           aria-label="Christian Furr, go to top"
         >
           <AnimatePresence>
@@ -105,7 +105,7 @@ export function Navbar() {
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-foreground-muted transition-colors hover:bg-white/10 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:hidden"
+          className="-mr-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-foreground-muted transition-colors hover:bg-white/10 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:hidden"
         >
           <span className="relative h-4 w-4">
             <span
