@@ -15,7 +15,7 @@ type ProjectFeatureProps = {
 };
 
 export function ProjectFeature({ project, index }: ProjectFeatureProps) {
-  const imageLeft = index === 1;
+  const imageLeft = index % 2 === 1;
   const [spyOpen, setSpyOpen] = useState(false);
   const [curtainOpen, setCurtainOpen] = useState(false);
   const [shootOpen, setShootOpen] = useState(false);
