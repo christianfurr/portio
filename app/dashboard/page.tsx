@@ -398,7 +398,7 @@ function ActivityItem({ activity }: { activity: Doc<"activityLog"> }) {
   const getActivityColor = (type: string): string => {
     if (type.includes("upload") || type.includes("created")) return "#22c55e";
     if (type.includes("delete")) return "#ef4444";
-    if (type.includes("update")) return "#ffb454";
+    if (type.includes("update")) return "#4c9fe0";
     return "#a855f7";
   };
 

@@ -42,11 +42,11 @@ export function About() {
       aria-labelledby="about-heading"
     >
       <div
-        className="absolute -left-24 top-1/2 h-[480px] w-[480px] -translate-y-1/2 rounded-full bg-glow-ember/14 blur-3xl"
+        className="absolute -left-24 top-1/2 h-[480px] w-[480px] -translate-y-1/2 rounded-full bg-glow-royal/14 blur-3xl"
         aria-hidden
       />
       <div
-        className="absolute -right-20 bottom-1/4 h-[360px] w-[360px] rounded-full bg-glow-amber/12 blur-3xl"
+        className="absolute -right-20 bottom-1/4 h-[360px] w-[360px] rounded-full bg-glow-blue/12 blur-3xl"
         aria-hidden
       />
       <div className="relative mx-auto max-w-[1200px]">

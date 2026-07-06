@@ -19,7 +19,7 @@ export function Projects() {
         aria-hidden
       />
       <div
-        className="absolute left-1/4 top-1/2 h-[320px] w-[320px] -translate-y-1/2 rounded-full bg-glow-amber/14 blur-3xl"
+        className="absolute left-1/4 top-1/2 h-[320px] w-[320px] -translate-y-1/2 rounded-full bg-glow-blue/14 blur-3xl"
         aria-hidden
       />
       <div className="relative mx-auto max-w-[1200px]">

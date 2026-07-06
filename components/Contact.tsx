@@ -37,7 +37,7 @@ export function Contact() {
         aria-hidden
       />
       <div
-        className="absolute right-1/4 top-1/2 h-[260px] w-[260px] -translate-y-1/2 rounded-full bg-glow-ember/12 blur-3xl"
+        className="absolute right-1/4 top-1/2 h-[260px] w-[260px] -translate-y-1/2 rounded-full bg-glow-royal/12 blur-3xl"
         aria-hidden
       />
       <div className="relative mx-auto max-w-[1200px] text-center">

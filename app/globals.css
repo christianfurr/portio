@@ -1,26 +1,27 @@
 @import "tailwindcss";
 
 /*
- * Theme: "House lights down" — a dark theater house lit by tungsten stage light.
- * Warm near-black surfaces, amber key light as the accent, curtain red reserved
- * for live/error states. Type: Fraunces (display), Inter (body), JetBrains Mono
- * (cue labels, tech tags).
+ * Theme: "Cougar blue, house lights down" — a dark theater house washed in
+ * BYU blue stage light. Navy-black surfaces, a bright BYU royal as the accent
+ * (official navy #002E5D anchors gradients; the accent is lightened for
+ * contrast on dark), curtain red reserved for live/error states.
+ * Type: Fraunces (display), Inter (body), JetBrains Mono (cue labels, tags).
  */
 :root {
-  --background: #0c0a07;
-  --background-alt: #171310;
-  --foreground: #f5f1e8;
-  --foreground-muted: #a8a094;
-  --muted: #a8a094;
-  --border: #38322a;
-  --accent: #ffb454;
-  --card: #16120d;
-  --card-hover: #1e1913;
+  --background: #070b12;
+  --background-alt: #0f1620;
+  --foreground: #f2f6fa;
+  --foreground-muted: #9daab8;
+  --muted: #9daab8;
+  --border: #2b3644;
+  --accent: #4c9fe0;
+  --card: #0c121b;
+  --card-hover: #131c28;
   --success: #22c55e;
   --error: #ef4444;
   --warning: #f59e0b;
-  --glow-amber: #ffb454;
-  --glow-ember: #ff7847;
+  --glow-blue: #4c9fe0;
+  --glow-royal: #2f6fce;
   --glow-red: #e5484d;
 }
 
@@ -37,8 +38,8 @@
   --color-success: var(--success);
   --color-error: var(--error);
   --color-warning: var(--warning);
-  --color-glow-amber: var(--glow-amber);
-  --color-glow-ember: var(--glow-ember);
+  --color-glow-blue: var(--glow-blue);
+  --color-glow-royal: var(--glow-royal);
   --color-glow-red: var(--glow-red);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), Georgia, serif;
@@ -192,25 +193,20 @@ button:focus-visible {
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 180, 84, 0.3);
+    box-shadow: 0 0 20px rgba(76, 159, 224, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(255, 180, 84, 0.5);
+    box-shadow: 0 0 40px rgba(76, 159, 224, 0.5);
   }
 }
 
-@keyframes vu-meter {
+/* Spotlight beam pan for the StageLink camera-feed demo */
+@keyframes spot-sweep {
   0%, 100% {
-    transform: scaleY(0.35);
-  }
-  25% {
-    transform: scaleY(0.85);
+    transform: translateX(-28%) rotate(-6deg);
   }
   50% {
-    transform: scaleY(0.55);
-  }
-  75% {
-    transform: scaleY(0.95);
+    transform: translateX(28%) rotate(6deg);
   }
 }
 
@@ -275,12 +271,12 @@ button:focus-visible {
 }
 
 .bg-gradient-accent {
-  background: linear-gradient(135deg, var(--accent) 0%, #cc7a2e 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, #002e5d 100%);
 }
 
 /* Glassmorphism */
 .glass {
-  background: rgba(18, 15, 11, 0.8);
+  background: rgba(9, 13, 20, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);

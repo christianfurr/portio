@@ -203,7 +203,7 @@ npx convex deploy    # Deploy Convex to production
 
 ## Design Theme
 
-"House lights down" — warm theater-black with tungsten-amber accent. Tokens in `app/globals.css`. Fonts: Fraunces (h1–h3, global CSS rule), Inter (body), JetBrains Mono (cue labels, tech tags). Sections open with `CueLabel` (cue-sheet eyebrows). StageLink's project card renders the animated `StageLinkMonitor` instead of a screenshot.
+"Cougar blue, house lights down" — navy-black theater base with BYU blue accent (`#4c9fe0` lightened from BYU navy `#002E5D`, which anchors gradients). Tokens in `app/globals.css`. Fonts: Fraunces (h1–h3, global CSS rule), Inter (body), JetBrains Mono (cue labels, tech tags). Sections open with `CueLabel` (cue-sheet eyebrows). StageLink's project card renders `StageLinkMonitor` — an animated low-latency camera-feed demo (StageLink is camera monitoring, not audio).
 
 ## Quick Reference
 
