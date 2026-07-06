@@ -53,13 +53,17 @@ export function useCountUp(
         cancelAnimationFrame(frameRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `start` is recreated each render; including it would cancel the animation on every re-render
   }, [endValue, startOnMount]);
 
-  // Reset when endValue changes
-  useEffect(() => {
+  // Reset when endValue changes — state adjustment during render
+  // (per React docs) instead of a cascading setState-in-effect.
+  const [prevEndValue, setPrevEndValue] = useState(endValue);
+  if (prevEndValue !== endValue) {
+    setPrevEndValue(endValue);
     setValue(0);
     setHasStarted(false);
-  }, [endValue]);
+  }
 
   return { value, start };
 }

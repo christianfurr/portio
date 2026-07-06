@@ -38,7 +38,9 @@ export function BYUShootModal({ onClose }: BYUShootModalProps) {
   const dragStart = useRef<{ x: number; y: number } | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ballRef = useRef(ball);
-  ballRef.current = ball;
+  useEffect(() => {
+    ballRef.current = ball;
+  }, [ball]);
 
   const shoot = useCallback(
     (fromX: number, fromY: number, toX: number, toY: number) => {
@@ -85,7 +87,8 @@ export function BYUShootModal({ onClose }: BYUShootModalProps) {
     const loop = () => {
       const b = ballRef.current;
       if (!b) return;
-      let { x, y, vx, vy } = b;
+      const { vx } = b;
+      let { x, y, vy } = b;
       vy += GRAVITY;
       x += vx;
       y += vy;

@@ -398,11 +398,12 @@ function ActivityItem({ activity }: { activity: Doc<"activityLog"> }) {
   const getActivityColor = (type: string): string => {
     if (type.includes("upload") || type.includes("created")) return "#22c55e";
     if (type.includes("delete")) return "#ef4444";
-    if (type.includes("update")) return "#0a84ff";
+    if (type.includes("update")) return "#ffb454";
     return "#a855f7";
   };
 
   const formatTimeAgo = (timestamp: number) => {
+    // eslint-disable-next-line react-hooks/purity -- relative-time label; a slightly stale "now" between re-renders is acceptable
     const seconds = Math.floor((Date.now() - timestamp) / 1000);
 
     if (seconds < 60) return "just now";

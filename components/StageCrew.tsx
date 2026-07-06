@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { CueLabel } from "@/components/CueLabel";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -26,8 +27,8 @@ const proficiencyStyles: Record<string, { label: string; bg: string; text: strin
   },
   familiar: {
     label: "Familiar",
-    bg: "bg-glow-orange/15 border-glow-orange/30",
-    text: "text-glow-orange",
+    bg: "bg-glow-amber/15 border-glow-amber/30",
+    text: "text-glow-amber",
   },
 };
 
@@ -66,12 +67,13 @@ export function StageCrew() {
         aria-hidden
       />
       <div
-        className="absolute -left-16 bottom-1/4 h-[380px] w-[380px] rounded-full bg-glow-pink/12 blur-3xl"
+        className="absolute -left-16 bottom-1/4 h-[380px] w-[380px] rounded-full bg-glow-ember/12 blur-3xl"
         aria-hidden
       />
 
       <div className="relative mx-auto max-w-[1200px]">
         {/* Header */}
+        <CueLabel cue="03" label="Backstage" />
         <motion.h2
           id="stage-crew-heading"
           className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl"
@@ -107,7 +109,7 @@ export function StageCrew() {
                 custom={i + 2}
                 variants={fadeUp}
               >
-                <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-accent/5 via-transparent to-glow-pink/5 opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-accent/5 via-transparent to-glow-ember/5 opacity-0 transition-opacity group-hover:opacity-100" />
                 <div className="relative">
                   <span className="text-2xl" aria-hidden>
                     {roleIcons[r.role] || "🎭"}
@@ -209,7 +211,7 @@ export function StageCrew() {
                       key={`${sw.name}-${i}`}
                       className="flex items-center gap-3"
                     >
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-glow-pink" aria-hidden />
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-glow-ember" aria-hidden />
                       <span className="text-foreground">{sw.name}</span>
                       <span
                         className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${style.bg} ${style.text}`}

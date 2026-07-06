@@ -1,21 +1,27 @@
 @import "tailwindcss";
 
+/*
+ * Theme: "House lights down" — a dark theater house lit by tungsten stage light.
+ * Warm near-black surfaces, amber key light as the accent, curtain red reserved
+ * for live/error states. Type: Fraunces (display), Inter (body), JetBrains Mono
+ * (cue labels, tech tags).
+ */
 :root {
-  --background: #0a0a0a;
-  --background-alt: #1a1a1a;
-  --foreground: #f5f5f7;
-  --foreground-muted: #a1a1a6;
-  --muted: #a1a1a6;
-  --border: #38383a;
-  --accent: #0a84ff;
-  --card: #141414;
-  --card-hover: #1c1c1c;
+  --background: #0c0a07;
+  --background-alt: #171310;
+  --foreground: #f5f1e8;
+  --foreground-muted: #a8a094;
+  --muted: #a8a094;
+  --border: #38322a;
+  --accent: #ffb454;
+  --card: #16120d;
+  --card-hover: #1e1913;
   --success: #22c55e;
   --error: #ef4444;
   --warning: #f59e0b;
-  --glow-pink: #f472b6;
-  --glow-orange: #fb923c;
-  --glow-red: #f87171;
+  --glow-amber: #ffb454;
+  --glow-ember: #ff7847;
+  --glow-red: #e5484d;
 }
 
 @theme inline {
@@ -31,20 +37,48 @@
   --color-success: var(--success);
   --color-error: var(--error);
   --color-warning: var(--warning);
-  --color-glow-pink: var(--glow-pink);
-  --color-glow-orange: var(--glow-orange);
+  --color-glow-amber: var(--glow-amber);
+  --color-glow-ember: var(--glow-ember);
   --color-glow-red: var(--glow-red);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+/* Guard against stray horizontal overflow (decorative glow blobs, negative offsets) */
+html,
+body {
+  overflow-x: clip;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 a:focus-visible,
@@ -158,10 +192,25 @@ button:focus-visible {
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(10, 132, 255, 0.3);
+    box-shadow: 0 0 20px rgba(255, 180, 84, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(10, 132, 255, 0.5);
+    box-shadow: 0 0 40px rgba(255, 180, 84, 0.5);
+  }
+}
+
+@keyframes vu-meter {
+  0%, 100% {
+    transform: scaleY(0.35);
+  }
+  25% {
+    transform: scaleY(0.85);
+  }
+  50% {
+    transform: scaleY(0.55);
+  }
+  75% {
+    transform: scaleY(0.95);
   }
 }
 
@@ -226,12 +275,12 @@ button:focus-visible {
 }
 
 .bg-gradient-accent {
-  background: linear-gradient(135deg, var(--accent) 0%, #0066cc 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, #cc7a2e 100%);
 }
 
 /* Glassmorphism */
 .glass {
-  background: rgba(20, 20, 20, 0.8);
+  background: rgba(18, 15, 11, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);

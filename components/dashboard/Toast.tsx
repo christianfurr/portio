@@ -52,6 +52,13 @@ export function Toast({
   const [isLeaving, setIsLeaving] = useState(false);
   const styles = variantStyles[variant];
 
+  const handleClose = () => {
+    setIsLeaving(true);
+    setTimeout(() => {
+      onClose(id);
+    }, 200);
+  };
+
   useEffect(() => {
     // Trigger enter animation
     requestAnimationFrame(() => {
@@ -65,14 +72,8 @@ export function Toast({
       }, duration);
       return () => clearTimeout(timer);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration]);
-
-  const handleClose = () => {
-    setIsLeaving(true);
-    setTimeout(() => {
-      onClose(id);
-    }, 200);
-  };
 
   return (
     <div

@@ -39,7 +39,7 @@ export function Hero() {
           aria-hidden
         />
         <div
-          className="absolute right-0 top-1/3 h-[380px] w-[380px] -translate-y-1/2 rounded-full bg-glow-pink/16 blur-3xl"
+          className="absolute right-0 top-1/3 h-[380px] w-[380px] -translate-y-1/2 rounded-full bg-glow-ember/16 blur-3xl"
           aria-hidden
         />
         <div className="relative flex flex-col-reverse items-center gap-12 md:flex-row md:items-center md:justify-between">
@@ -114,7 +114,7 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             >
               {/* Gradient glow behind */}
-              <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-accent via-glow-pink to-accent opacity-50 blur-xl" />
+              <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-accent via-glow-ember to-accent opacity-50 blur-xl" />
               
               {/* Portrait container */}
               <div className="relative h-64 w-64 overflow-hidden rounded-full shadow-2xl md:h-96 md:w-96">

@@ -37,10 +37,13 @@ export function Contact() {
         aria-hidden
       />
       <div
-        className="absolute right-1/4 top-1/2 h-[260px] w-[260px] -translate-y-1/2 rounded-full bg-glow-pink/12 blur-3xl"
+        className="absolute right-1/4 top-1/2 h-[260px] w-[260px] -translate-y-1/2 rounded-full bg-glow-ember/12 blur-3xl"
         aria-hidden
       />
       <div className="relative mx-auto max-w-[1200px] text-center">
+        <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-accent">
+          Cue 05 · Curtain call
+        </p>
         <h2
           id="contact-heading"
           className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl"

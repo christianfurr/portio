@@ -56,8 +56,12 @@ export function SnakeModal({ onClose }: SnakeModalProps) {
   const nextDirRef = useRef<Dir>("right");
   const snakeRef = useRef(snake);
   const foodRef = useRef(food);
-  snakeRef.current = snake;
-  foodRef.current = food;
+  useEffect(() => {
+    snakeRef.current = snake;
+  }, [snake]);
+  useEffect(() => {
+    foodRef.current = food;
+  }, [food]);
 
   const reset = useCallback(() => {
     const initial = initSnake();

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { CueLabel } from "@/components/CueLabel";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
@@ -43,14 +44,15 @@ export function PhotographySection() {
       aria-labelledby="photography-heading"
     >
       <div
-        className="absolute -left-24 top-1/2 h-[480px] w-[480px] -translate-y-1/2 rounded-full bg-glow-pink/14 blur-3xl"
+        className="absolute -left-24 top-1/2 h-[480px] w-[480px] -translate-y-1/2 rounded-full bg-glow-ember/14 blur-3xl"
         aria-hidden
       />
       <div
-        className="absolute -right-20 bottom-1/4 h-[360px] w-[360px] rounded-full bg-glow-orange/12 blur-3xl"
+        className="absolute -right-20 bottom-1/4 h-[360px] w-[360px] rounded-full bg-glow-amber/12 blur-3xl"
         aria-hidden
       />
       <div className="relative mx-auto max-w-[1200px]">
+        <CueLabel cue="04" label="Stills" />
         <h2
           id="photography-heading"
           className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl"
@@ -58,7 +60,7 @@ export function PhotographySection() {
           Photography
         </h2>
         <p className="mt-4 max-w-xl text-foreground-muted leading-relaxed">
-          A selection of photos I've taken. I like to shoot landscapes, street,
+          A selection of photos I&apos;ve taken. I like to shoot landscapes, street,
           and the occasional portrait.
         </p>
         {isLoading ? (

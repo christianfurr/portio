@@ -1,6 +1,5 @@
 import { v } from "convex/values";
-import { query, mutation, internalMutation } from "./_generated/server";
-import { Doc } from "./_generated/dataModel";
+import { query, internalMutation } from "./_generated/server";
 import { requireAuth } from "./lib/auth";
 
 export const getContentStats = query({

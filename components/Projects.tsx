@@ -2,6 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { CueLabel } from "./CueLabel";
 import { ProjectFeature } from "./ProjectFeature";
 
 export function Projects() {
@@ -18,10 +19,11 @@ export function Projects() {
         aria-hidden
       />
       <div
-        className="absolute left-1/4 top-1/2 h-[320px] w-[320px] -translate-y-1/2 rounded-full bg-glow-orange/14 blur-3xl"
+        className="absolute left-1/4 top-1/2 h-[320px] w-[320px] -translate-y-1/2 rounded-full bg-glow-amber/14 blur-3xl"
         aria-hidden
       />
       <div className="relative mx-auto max-w-[1200px]">
+        <CueLabel cue="01" label="Lights up" />
         <h2
           id="work-heading"
           className="mb-4 text-3xl font-semibold tracking-tight text-foreground md:text-4xl"
@@ -29,7 +31,7 @@ export function Projects() {
           Work
         </h2>
         <p className="mb-16 max-w-xl text-foreground-muted">
-          Selected projects I've built and shipped.
+          Selected projects I&apos;ve built and shipped.
         </p>
         {!projects ? (
           <div className="space-y-8">

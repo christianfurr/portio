@@ -49,7 +49,7 @@ export function Footer() {
         aria-hidden
       />
       <div
-        className="absolute bottom-0 right-1/3 h-[220px] w-[220px] rounded-full bg-glow-orange/10 blur-3xl"
+        className="absolute bottom-0 right-1/3 h-[220px] w-[220px] rounded-full bg-glow-amber/10 blur-3xl"
         aria-hidden
       />
       <div className="relative mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 sm:flex-row">

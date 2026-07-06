@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 
 const QUOTE =
@@ -32,24 +32,21 @@ export default function TypePage() {
         )
       : null;
 
-  useEffect(() => {
-    if (!started && typed.length > 0) {
-      setStarted(true);
-      setStartTime(Date.now());
-    }
-  }, [started, typed.length]);
-
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const v = e.target.value;
       if (v.length > QUOTE.length) return;
       setTyped(v);
+      if (!started && v.length > 0) {
+        setStarted(true);
+        setStartTime(Date.now());
+      }
       if (v === QUOTE) {
         setDone(true);
         setEndTime(Date.now());
       }
     },
-    []
+    [started]
   );
 
   return (

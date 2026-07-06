@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import type { Project } from "@/data/projects";
+import { StageLinkMonitor } from "@/components/StageLinkMonitor";
 import { SpymastersTeaserModal } from "@/components/easter-eggs/SpymastersTeaserModal";
 import { StageLinkCurtain } from "@/components/easter-eggs/StageLinkCurtain";
 import { BYUShootModal } from "@/components/easter-eggs/BYUShootModal";
@@ -60,7 +61,7 @@ export function ProjectFeature({ project, index }: ProjectFeatureProps) {
           {project.techStack.map((tech) => (
             <span
               key={tech}
-              className="rounded-full border border-border bg-background-alt px-3 py-1 text-sm text-foreground-muted"
+              className="rounded-sm border border-border bg-background-alt px-2.5 py-1 font-mono text-xs text-foreground-muted"
             >
               {tech}
             </span>
@@ -108,14 +109,18 @@ export function ProjectFeature({ project, index }: ProjectFeatureProps) {
           }}
           aria-label={`Double-click for ${project.title} easter egg`}
         >
-          <Image
-            src={project.image}
-            alt={`${project.title} screenshot`}
-            width={1200}
-            height={800}
-            className="w-full rounded-2xl border border-border object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
+          {project.title === "StageLink" ? (
+            <StageLinkMonitor />
+          ) : (
+            <Image
+              src={project.image}
+              alt={`${project.title} screenshot`}
+              width={1200}
+              height={800}
+              className="w-full rounded-2xl border border-border object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          )}
         </motion.div>
       </div>
 

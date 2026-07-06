@@ -11,7 +11,7 @@ export async function logActivity(
     description: string;
     entityType?: string;
     entityId?: string;
-    metadata?: any;
+    metadata?: unknown;
   }
 ) {
   await ctx.db.insert("activityLog", {

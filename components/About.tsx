@@ -1,5 +1,6 @@
 "use client";
 
+import { CueLabel } from "@/components/CueLabel";
 import { PortraitWithEgg } from "@/components/easter-eggs/PortraitWithEgg";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -41,17 +42,18 @@ export function About() {
       aria-labelledby="about-heading"
     >
       <div
-        className="absolute -left-24 top-1/2 h-[480px] w-[480px] -translate-y-1/2 rounded-full bg-glow-pink/14 blur-3xl"
+        className="absolute -left-24 top-1/2 h-[480px] w-[480px] -translate-y-1/2 rounded-full bg-glow-ember/14 blur-3xl"
         aria-hidden
       />
       <div
-        className="absolute -right-20 bottom-1/4 h-[360px] w-[360px] rounded-full bg-glow-orange/12 blur-3xl"
+        className="absolute -right-20 bottom-1/4 h-[360px] w-[360px] rounded-full bg-glow-amber/12 blur-3xl"
         aria-hidden
       />
       <div className="relative mx-auto max-w-[1200px]">
         <div className="grid gap-12 md:grid-cols-2 md:items-center md:gap-16">
           <PortraitWithEgg />
           <div className="max-w-xl">
+            <CueLabel cue="02" label="Spotlight" />
             <h2
               id="about-heading"
               className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl"

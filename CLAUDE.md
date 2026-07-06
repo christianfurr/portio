@@ -170,7 +170,7 @@ portio/
 
 3. **Loading states**: Return skeleton/placeholder when query returns `undefined`.
 
-4. **Dashboard auth**: Password-based auth stored in `sessionStorage`. See `app/dashboard/layout.tsx`.
+4. **Dashboard auth**: Convex Auth (Password provider). Sign-up is restricted to `ADMIN_EMAIL` (Convex env var), and all mutations call `requireAuth` from `convex/lib/auth.ts`. Middleware protects `/dashboard/*` routes. To run authenticated Convex CLI commands: `bunx convex run <fn> --identity '{"email":"<ADMIN_EMAIL>"}'`.
 
 ### Key Component Locations
 
@@ -198,8 +198,12 @@ npx convex deploy    # Deploy Convex to production
 | Variable | Purpose |
 |----------|---------|
 | `NEXT_PUBLIC_CONVEX_URL` | Convex deployment URL |
-| `NEXT_PUBLIC_ADMIN_PASSWORD` | Dashboard access password |
 | `NEXT_PUBLIC_SITE_URL` | Site URL for SEO (defaults to christianfurr.dev) |
+| `ADMIN_EMAIL` | (Convex env, not .env) Only account allowed to sign up / mutate |
+
+## Design Theme
+
+"House lights down" — warm theater-black with tungsten-amber accent. Tokens in `app/globals.css`. Fonts: Fraunces (h1–h3, global CSS rule), Inter (body), JetBrains Mono (cue labels, tech tags). Sections open with `CueLabel` (cue-sheet eyebrows). StageLink's project card renders the animated `StageLinkMonitor` instead of a screenshot.
 
 ## Quick Reference
 
