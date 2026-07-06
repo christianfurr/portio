@@ -14,6 +14,16 @@ export async function requireAuth(ctx: MutationCtx | QueryCtx): Promise<void> {
   }
 }
 
+export async function isAdmin(ctx: MutationCtx | QueryCtx): Promise<boolean> {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) return false;
+
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (adminEmail && identity.email !== adminEmail) return false;
+
+  return true;
+}
+
 export async function getAuthenticatedUser(ctx: MutationCtx | QueryCtx) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {

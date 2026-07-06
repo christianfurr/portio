@@ -1,10 +1,12 @@
 import { v } from "convex/values";
 import { query, mutation, internalMutation } from "./_generated/server";
 import { Doc } from "./_generated/dataModel";
+import { requireAuth } from "./lib/auth";
 
 export const getContentStats = query({
   args: {},
   handler: async (ctx) => {
+    await requireAuth(ctx);
     const photos = await ctx.db.query("photos").collect();
     const projects = await ctx.db.query("projects").collect();
 
@@ -61,6 +63,7 @@ export const getActivityFeed = query({
     typeFilter: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    await requireAuth(ctx);
     const limit = args.limit ?? 20;
 
     // Use the by_type index when filtering to avoid fetching then slicing.
@@ -79,6 +82,7 @@ export const getActivityFeed = query({
 export const getActivityTypes = query({
   args: {},
   handler: async (ctx) => {
+    await requireAuth(ctx);
     // Collect a reasonable sample to find all types without a full table scan.
     const recent = await ctx.db.query("activityLog").order("desc").take(500);
     const types = new Set(recent.map((a) => a.type));

@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { logActivity } from "./lib/activity";
-import { requireAuth } from "./lib/auth";
+import { isAdmin, requireAuth } from "./lib/auth";
 
 export const list = query({
   args: {
@@ -14,7 +14,8 @@ export const list = query({
       .order("asc")
       .collect();
 
-    const filtered = args.showDrafts
+    const showDrafts = args.showDrafts && (await isAdmin(ctx));
+    const filtered = showDrafts
       ? projects
       : projects.filter((p) => !p.isDraft);
 
