@@ -3,20 +3,12 @@
 import { useQuery } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
-import { Counter } from "@/components/kinetic/Counter";
 import { KineticHeading } from "@/components/kinetic/KineticHeading";
 import { ScrollAxisText } from "@/components/kinetic/Parallax";
 
-/*
- * Credits and ledger.
- *
- * Every figure here is counted from live Convex data rather than hard-coded, so
- * the band cannot drift out of date as content is added through the CMS.
- */
+/* Production credits and equipment, set like end credits: title left, role right. */
 export function CreditsLedger() {
   const stageCrew = useQuery(api.stageCrew.get);
-  const projects = useQuery(api.projects.list, {});
-  const photos = useQuery(api.photos.list, {});
 
   if (stageCrew === undefined) {
     return (
@@ -30,13 +22,6 @@ export function CreditsLedger() {
 
   if (stageCrew === null) return null;
 
-  const ledger = [
-    { label: "Projects shipped", value: projects?.length ?? 0 },
-    { label: "Productions crewed", value: stageCrew.shows.length },
-    { label: "Rigs operated", value: stageCrew.equipment.length },
-    { label: "Frames published", value: photos?.length ?? 0 },
-  ];
-
   return (
     <section
       id="credits"
@@ -47,28 +32,9 @@ export function CreditsLedger() {
         <div className="h-px w-full bg-foreground" />
         <div className="flex items-baseline justify-between gap-6 py-3">
           <span className="type-marginalia text-foreground-muted">Section 03</span>
-          <span className="type-marginalia text-foreground-muted">Credits &amp; ledger</span>
+          <span className="type-marginalia text-foreground-muted">Credits</span>
         </div>
         <div className="h-px w-full bg-border" />
-
-        {/* Ledger — the animated counters. */}
-        <ul
-          role="list"
-          className="mt-10 grid grid-cols-2 gap-x-8 gap-y-10 border-b border-border pb-12 md:grid-cols-4"
-        >
-          {ledger.map((entry, index) => (
-            <li key={entry.label}>
-              <Counter
-                value={entry.value}
-                delay={index * 0.12}
-                className="block font-display text-6xl leading-none text-foreground lg:text-8xl"
-              />
-              <span className="type-marginalia mt-3 block text-foreground-muted">
-                {entry.label}
-              </span>
-            </li>
-          ))}
-        </ul>
 
         <div className="mt-14 grid gap-12 md:grid-cols-12 md:gap-14">
           <div className="md:col-span-5">

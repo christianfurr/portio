@@ -118,7 +118,7 @@ export function Masthead() {
             data-marginalia
             className="type-marginalia hidden text-foreground-muted sm:block"
           >
-            Provo, Utah
+            Salt Lake City
           </span>
           <span data-marginalia className="type-marginalia text-accent">
             Available for work

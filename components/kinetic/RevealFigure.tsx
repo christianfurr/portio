@@ -81,9 +81,16 @@ export function RevealFigure({
         animate={{ clipPath: revealed ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)" }}
         transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
       >
+        {/*
+         * drift={0} pins the image dead still. Screenshots shown inside a
+         * device frame must not drift or over-scale — the content would slide
+         * against the bezel and break the illusion that it is a screen.
+         */}
         <motion.div
           className="absolute inset-0"
-          style={prefersReduced ? undefined : { y, scale, willChange: "transform" }}
+          style={
+            prefersReduced || drift === 0 ? undefined : { y, scale, willChange: "transform" }
+          }
         >
           <Image
             src={src}

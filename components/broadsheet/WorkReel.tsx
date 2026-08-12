@@ -7,9 +7,8 @@ import { useRef } from "react";
 
 import { api } from "@/convex/_generated/api";
 import { KineticHeading } from "@/components/kinetic/KineticHeading";
-import { RevealFigure } from "@/components/kinetic/RevealFigure";
+import { DeviceFrame } from "@/components/kinetic/DeviceFrame";
 import { TiltCard } from "@/components/kinetic/TiltCard";
-import { StageLinkMonitor } from "@/components/StageLinkMonitor";
 
 type ReelProject = {
   id: string;
@@ -148,15 +147,17 @@ function PinnedReel({ projects }: { projects: ReelProject[] }) {
 
 /*
  * Dark plate on paper. The act-ink class flips the semantic tokens inside the
- * card, which is also what keeps the StageLink monitor demo — built for a dark
- * surface — reading correctly on a light page.
+ * card, so the browser mockup's chrome picks up ink borders and a dark address
+ * bar without restating any colours.
  */
 function ProjectPlate({ project, index }: { project: ReelProject; index: number }) {
-  const isStageLink = project.title.toLowerCase() === "stagelink";
-
   return (
     <TiltCard max={6} glare>
-      <article className="act-ink grid gap-0 border border-border md:min-h-[68vh] md:grid-cols-2">
+      {/*
+       * Height is tuned to the 16:9 mockup. At 68vh the device floated in a
+       * pool of dead space and the text column stretched to match it.
+       */}
+      <article className="act-ink grid gap-0 border border-border md:min-h-[54vh] md:grid-cols-2">
         <div className="relative order-2 md:order-1 flex flex-col justify-between p-7 md:p-10">
           <div>
             <div className="flex items-baseline justify-between">
@@ -207,23 +208,17 @@ function ProjectPlate({ project, index }: { project: ReelProject; index: number 
           </div>
         </div>
 
-        <div className="order-1 md:order-2 relative min-h-[240px] border-b border-border md:border-b-0 md:border-l">
-          {isStageLink ? (
-            <div className="flex h-full w-full items-center justify-center p-6">
-              <StageLinkMonitor />
-            </div>
-          ) : project.image ? (
-            <RevealFigure
+        <div className="order-1 md:order-2 relative flex items-center justify-center border-b border-border p-6 md:border-b-0 md:border-l md:p-8">
+          {project.image ? (
+            <DeviceFrame
               src={project.image}
               alt={`${project.title} screenshot`}
-              ratio="16 / 11"
+              url={project.liveUrl}
               unoptimized
-              drift={5}
-              sizes="(max-width: 768px) 100vw, 40vw"
-              className="h-full"
+              sizes="(max-width: 768px) 88vw, 38vw"
             />
           ) : (
-            <div className="h-full w-full bg-background-alt" />
+            <div className="aspect-16/9 w-full bg-background-alt" />
           )}
         </div>
       </article>
