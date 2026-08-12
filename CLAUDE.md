@@ -36,14 +36,23 @@ portio/
 │   └── type/                   # Easter egg typing page
 │
 ├── components/                 # React components
-│   ├── Hero.tsx                # Homepage hero section
-│   ├── Projects.tsx            # Projects showcase section
-│   ├── About.tsx               # About me section
-│   ├── PhotographySection.tsx  # Photography preview section
-│   ├── Contact.tsx             # Contact section
-│   ├── Navbar.tsx              # Site navigation
-│   ├── Footer.tsx              # Site footer
-│   ├── ProjectFeature.tsx      # Individual project card
+│   ├── broadsheet/             # Public page sections (Broadsheet design)
+│   │   ├── Masthead.tsx        # Opening spread + anime.js load sequence
+│   │   ├── WorkReel.tsx        # Pinned horizontal project reel
+│   │   ├── AboutSpread.tsx     # Feature spread w/ drop cap
+│   │   ├── CreditsLedger.tsx   # Animated counters + credits
+│   │   ├── StillsSection.tsx   # Paper→ink act break, photo contact sheet
+│   │   ├── ContactColophon.tsx # Closing statement + colophon (attribution)
+│   │   └── BroadsheetNav.tsx   # Masthead rule nav, inverts over dark acts
+│   ├── kinetic/                # Reusable motion primitives
+│   │   ├── KineticHeading.tsx  # Per-glyph reveal + variable-font axes
+│   │   ├── RevealFigure.tsx    # Clip-path reveal + scroll drift
+│   │   ├── Magnetic.tsx        # Pointer-following buttons
+│   │   ├── TiltCard.tsx        # Cursor-reactive 3D tilt
+│   │   ├── Parallax.tsx        # Parallax + ScrollAxisText
+│   │   ├── Counter.tsx         # Scroll-triggered counters
+│   │   └── SmoothScroll.tsx    # Lenis provider
+│   ├── ui/skiper-ui/           # Vendored Skiper registry (ESLint-ignored)
 │   ├── dashboard/              # Reusable dashboard UI components
 │   │   ├── Button.tsx
 │   │   ├── Card.tsx
@@ -147,7 +156,7 @@ portio/
 
 | Route | Type | Purpose |
 |-------|------|---------|
-| `/` | Public | Main portfolio homepage |
+| `/` | Public | Main portfolio homepage (Broadsheet) |
 | `/photography` | Public | Full photography gallery |
 | `/terminal` | Public | Easter egg terminal |
 | `/type` | Public | Easter egg typing page |
@@ -201,9 +210,45 @@ npx convex deploy    # Deploy Convex to production
 | `NEXT_PUBLIC_SITE_URL` | Site URL for SEO (defaults to christianfurr.dev) |
 | `ADMIN_EMAIL` | (Convex env, not .env) Only account allowed to sign up / mutate |
 
-## Design Theme
+## Design Theme — "Broadsheet" (public site)
 
-"Cougar blue, house lights down" — navy-black theater base with BYU blue accent (`#4c9fe0` lightened from BYU navy `#002E5D`, which anchors gradients). Tokens in `app/globals.css`. Fonts: Fraunces (h1–h3, global CSS rule), Inter (body), JetBrains Mono (cue labels, tech tags). Sections open with `CueLabel` (cue-sheet eyebrows). StageLink's project card renders `StageLinkMonitor` — an animated low-latency camera-feed demo (StageLink is camera monitoring, not audio).
+Kinetic editorial: warm paper (`#f2efe9`), near-black ink (`#0b0b0c`), vermillion accent (`#ff3b14` on ink / `#c42b0c` on paper). Fonts: Fraunces (display), Inter (body), JetBrains Mono (marginalia, figure numbers, tags).
+
+**Two themes live in `app/globals.css` and must stay separate:**
+
+| Scope | Theme | Used by |
+|---|---|---|
+| `:root` | Legacy dark navy/blue | `/dashboard/*` — do NOT repurpose |
+| `.editorial` | Broadsheet paper | Public pages |
+| `.act-ink` | Broadsheet inverted | Dark sections + `/photography` |
+
+The public site inverts paper→ink mid-scroll. `.act-ink` flips the *same* semantic tokens (`--background`, `--foreground`, `--border`, `--accent`), so write components once against semantic names and they invert for free. `.act-ink-tokens` flips tokens without painting a surface (used by the fixed nav). The dashboard depends heavily on the legacy tokens (`background-alt` alone in 24 places) — never move the new palette onto `:root`.
+
+Variable-font axes (`--fv-wght`, `--fv-soft`, `--fv-wonk`, `--fv-opsz`) are registered via `@property` in globals.css; unregistered custom properties jump instead of interpolating. Fraunces must load `axes: ["SOFT","WONK","opsz"]` in `app/layout.tsx` or there is nothing to animate.
+
+StageLink's card renders `StageLinkMonitor` — an animated low-latency camera-feed demo (StageLink is camera monitoring, not audio). Work cards are `.act-ink` plates on paper, which is what keeps that dark-surface demo reading correctly.
+
+## Motion Stack
+
+Each library has a distinct job — do not collapse them into one:
+
+| Library | Owns | Entry point |
+|---|---|---|
+| **anime.js v4** | Authored timelines: page-load choreography, glyph staggers, axis settles | `createTimeline`, `stagger`, also `morphTo`/`createDrawable` |
+| **Motion** | Continuous + physics: scroll linkage, springs, magnetism, tilt, parallax | `motion/react` |
+| **Lenis** | Smooth scroll everything else rides on | `components/kinetic/SmoothScroll.tsx` |
+| **Skiper UI** | `TextRoll`, `ProgressiveBlur` | `components/ui/skiper-ui/` |
+
+Import from `motion/react`, never `framer-motion` — they are the same library and mixing them ships two copies. Skiper's free tier **requires attribution**; it lives in the colophon in `ContactColophon.tsx`. `components/ui/skiper-ui/**` is vendored and ESLint-ignored — don't hand-edit it, re-add from the registry.
+
+Primitives are in `components/kinetic/`, page sections in `components/broadsheet/`.
+
+## Motion Footguns (all hit in practice — see git history)
+
+- **Never observe an element you also clip.** `clip-path: inset(100%)` gives zero visible area, so IntersectionObserver reports ratio 0 and the element never reveals — it hides itself permanently. Observe an unclipped wrapper, clip an inner layer (`RevealFigure.tsx`).
+- **Don't guard animation effects with a `hasRun` ref.** StrictMode does mount → cleanup → mount; the guard blocks the second run while cleanup already paused the timeline, leaving it frozen. `revert()` on cleanup and let it re-run.
+- **`useScroll({target})` needs its ref mounted on the same render as the hook.** A conditionally-rendered target throws "defined but not hydrated", and that invariant aborts every remaining effect in the commit — symptoms appear in unrelated components.
+- **Never gate page chrome on a Convex query.** Hide elements only after JS is confirmed running (layout effect), so a slow or failed query can't leave the page blank.
 
 ## Quick Reference
 
