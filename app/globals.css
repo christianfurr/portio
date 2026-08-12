@@ -1,13 +1,55 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 /*
- * Theme: "Cougar blue, house lights down" — a dark theater house washed in
- * BYU blue stage light. Navy-black surfaces, a bright BYU royal as the accent
- * (official navy #002E5D anchors gradients; the accent is lightened for
- * contrast on dark), curtain red reserved for live/error states.
- * Type: Fraunces (display), Inter (body), JetBrains Mono (cue labels, tags).
+ * ============================================================================
+ * TWO THEMES LIVE IN THIS FILE. THEY ARE DELIBERATELY SEPARATE.
+ * ============================================================================
+ *
+ * 1. :root — the legacy dark dashboard theme. The CMS at /dashboard/* depends
+ *    on these tokens (background-alt alone appears in 24 places). It is out of
+ *    scope for the redesign, so root stays dark and unchanged.
+ *
+ * 2. .editorial — the public site: "Broadsheet", a kinetic editorial system.
+ *    Scoping it to a wrapper class means the redesign cannot leak into the
+ *    dashboard, and the paper/ink act inversion is a one-class change.
+ *
+ * Public pages render inside .editorial. Sections opt into the dark half of
+ * the site with .act-ink, which flips the same semantic tokens rather than
+ * restating colors per component.
  */
+
+/* ---------------------------------------------------------------------------
+ * Registered custom properties.
+ * Unregistered CSS vars jump between values instead of interpolating, so the
+ * variable-font axes and scroll scalars must be registered to animate at all.
+ * ------------------------------------------------------------------------ */
+@property --fv-wght {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 400;
+}
+@property --fv-opsz {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 48;
+}
+@property --fv-soft {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --fv-wonk {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 :root {
+  /* Legacy dark dashboard theme — do not repurpose for public pages. */
   --background: #070b12;
   --background-alt: #0f1620;
   --foreground: #f2f6fa;
@@ -23,16 +65,105 @@
   --glow-blue: #4c9fe0;
   --glow-royal: #2f6fce;
   --glow-red: #e5484d;
+
+  /* --- Broadsheet raw palette (consumed by .editorial, not used directly) --- */
+  --paper: #f2efe9;
+  --paper-tint: #e7e2d8;
+  --paper-deep: #dcd5c8;
+  --ink: #0b0b0c;
+  --ink-raised: #17171a;
+  --ink-muted: #56534d;
+  --paper-muted: #9a968e;
+  --rule-paper: #cec7b8;
+  --rule-ink: #2c2c30;
+  /* Vermillion, in two weights: bright reads on ink, deep reads on paper. */
+  --vermillion: #ff3b14;
+  --vermillion-deep: #c42b0c;
+
+  /* shadcn tokens (radix-nova preset) — required by registry components. */
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+/* ---------------------------------------------------------------------------
+ * Broadsheet — the public site.
+ * Act one is paper. .act-ink flips the same semantic names so every component
+ * can be written once against --background/--foreground and invert for free.
+ * ------------------------------------------------------------------------ */
+.editorial {
+  --background: var(--paper);
+  --background-alt: var(--paper-tint);
+  --background-deep: var(--paper-deep);
+  --foreground: var(--ink);
+  --foreground-muted: var(--ink-muted);
+  --border: var(--rule-paper);
+  --accent: var(--vermillion-deep);
+  --accent-vivid: var(--vermillion);
+  --card: var(--paper-tint);
+
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/*
+ * act-ink-tokens flips the palette without painting a surface. The fixed nav
+ * uses it to invert as it passes over a dark section, while its own translucent
+ * backdrop stays under its control.
+ */
+.editorial .act-ink,
+.editorial.act-ink,
+.editorial .act-ink-tokens {
+  --background: var(--ink);
+  --background-alt: var(--ink-raised);
+  --background-deep: #000000;
+  --foreground: var(--paper);
+  --foreground-muted: var(--paper-muted);
+  --border: var(--rule-ink);
+  --accent: var(--vermillion);
+  --accent-vivid: var(--vermillion);
+  --card: var(--ink-raised);
+}
+
+.editorial .act-ink,
+.editorial.act-ink {
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-background-alt: var(--background-alt);
+  --color-background-deep: var(--background-deep);
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-accent: var(--accent);
+  --color-accent-vivid: var(--accent-vivid);
   --color-card: var(--card);
   --color-card-hover: var(--card-hover);
   --color-success: var(--success);
@@ -41,33 +172,182 @@
   --color-glow-blue: var(--glow-blue);
   --color-glow-royal: var(--glow-royal);
   --color-glow-red: var(--glow-red);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-vermillion: var(--vermillion);
+
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-heading: var(--font-fraunces), Georgia, serif;
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-/* Guard against stray horizontal overflow (decorative glow blobs, negative offsets) */
+/*
+ * Lenis drives scrolling on public pages, so native smooth-scroll is left off
+ * to avoid two scroll systems fighting over the same gesture.
+ */
 html,
 body {
   overflow-x: clip;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-h1,
-h2,
-h3 {
+/* Lenis requires these to avoid a double scrollbar on the root element. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+ * Broadsheet type
+ * ------------------------------------------------------------------------ */
+
+/*
+ * Fraunces exposes SOFT and WONK in addition to weight and optical size.
+ * Routing all four through registered vars lets scroll position drive the
+ * letterforms themselves, which is the core idea of this design.
+ */
+.kinetic-type {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-variation-settings:
+    "opsz" var(--fv-opsz),
+    "wght" var(--fv-wght),
+    "SOFT" var(--fv-soft),
+    "WONK" var(--fv-wonk);
+}
+
+.editorial h1,
+.editorial h2,
+.editorial h3 {
   font-family: var(--font-fraunces), Georgia, serif;
 }
 
+/* Masthead scale — clamped so the display type stays huge without overflowing. */
+.type-masthead {
+  font-size: clamp(3.25rem, 13vw, 13rem);
+  line-height: 0.82;
+  letter-spacing: -0.035em;
+}
+
+.type-display {
+  font-size: clamp(2.5rem, 7.5vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.type-lede {
+  font-size: clamp(1.125rem, 1.9vw, 1.5rem);
+  line-height: 1.5;
+}
+
+/* Mono marginalia: figure numbers, section cues, tech tags. */
+.type-marginalia {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Editorial hairline used between sections and around figures. */
+.rule-hair {
+  border-color: var(--border);
+  border-top-width: 1px;
+}
+
+/*
+ * Character reveal: each glyph is wrapped and clipped by its parent so it can
+ * slide in from below the baseline without painting outside the line box.
+ */
+.glyph-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.glyph {
+  display: inline-block;
+  will-change: transform;
+}
+
+/*
+ * Drop cap on the opening paragraph of the feature spread. Applied via
+ * ::first-letter so it works on whatever markup the CMS markdown produces.
+ */
+.broadsheet-copy > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 4.25em;
+  line-height: 0.78;
+  padding-right: 0.08em;
+  margin-top: 0.06em;
+  color: var(--accent);
+  font-variation-settings: "opsz" 144, "wght" 600, "SOFT" 0, "WONK" 1;
+}
+
+/*
+ * Grain wash. Fixed rather than per-section so it costs one composited layer
+ * for the whole page, and blended with overlay so the same texture reads on
+ * both the paper and ink acts without needing to be recoloured.
+ */
+.paper-grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0.28;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.30'/></svg>");
+}
+
+
+/* ---------------------------------------------------------------------------
+ * Accessibility
+ * ------------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -88,7 +368,10 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* Animation Keyframes */
+/* ---------------------------------------------------------------------------
+ * Legacy dashboard utilities. Still referenced across /dashboard — retained
+ * verbatim so the CMS is unaffected by the public redesign.
+ * ------------------------------------------------------------------------ */
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
@@ -163,7 +446,8 @@ button:focus-visible {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -181,7 +465,8 @@ button:focus-visible {
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(-5%);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
@@ -192,7 +477,8 @@ button:focus-visible {
 }
 
 @keyframes glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(76, 159, 224, 0.3);
   }
   50% {
@@ -200,17 +486,6 @@ button:focus-visible {
   }
 }
 
-/* Spotlight beam pan for the StageLink camera-feed demo */
-@keyframes spot-sweep {
-  0%, 100% {
-    transform: translateX(-28%) rotate(-6deg);
-  }
-  50% {
-    transform: translateX(28%) rotate(6deg);
-  }
-}
-
-/* Animation utility classes */
 .animate-shimmer {
   animation: shimmer 1.5s infinite;
 }
@@ -255,17 +530,31 @@ button:focus-visible {
   animation: glow 2s ease-in-out infinite;
 }
 
-/* Staggered animations for lists */
-.stagger-1 { animation-delay: 0.05s; }
-.stagger-2 { animation-delay: 0.1s; }
-.stagger-3 { animation-delay: 0.15s; }
-.stagger-4 { animation-delay: 0.2s; }
-.stagger-5 { animation-delay: 0.25s; }
-.stagger-6 { animation-delay: 0.3s; }
-.stagger-7 { animation-delay: 0.35s; }
-.stagger-8 { animation-delay: 0.4s; }
+.stagger-1 {
+  animation-delay: 0.05s;
+}
+.stagger-2 {
+  animation-delay: 0.1s;
+}
+.stagger-3 {
+  animation-delay: 0.15s;
+}
+.stagger-4 {
+  animation-delay: 0.2s;
+}
+.stagger-5 {
+  animation-delay: 0.25s;
+}
+.stagger-6 {
+  animation-delay: 0.3s;
+}
+.stagger-7 {
+  animation-delay: 0.35s;
+}
+.stagger-8 {
+  animation-delay: 0.4s;
+}
 
-/* Gradient backgrounds */
 .bg-gradient-radial {
   background: radial-gradient(ellipse at top, var(--background-alt) 0%, var(--background) 70%);
 }
@@ -274,7 +563,6 @@ button:focus-visible {
   background: linear-gradient(135deg, var(--accent) 0%, #002e5d 100%);
 }
 
-/* Glassmorphism */
 .glass {
   background: rgba(9, 13, 20, 0.8);
   backdrop-filter: blur(12px);
@@ -282,7 +570,6 @@ button:focus-visible {
   border: 1px solid var(--border);
 }
 
-/* Scrollbar styling */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -299,4 +586,33 @@ button:focus-visible {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
+}
+
+.dark {
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
 }

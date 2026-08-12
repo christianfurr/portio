@@ -3,7 +3,12 @@
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { BroadsheetNav } from "@/components/broadsheet/BroadsheetNav";
+import { KineticHeading } from "@/components/kinetic/KineticHeading";
+import { RevealFigure } from "@/components/kinetic/RevealFigure";
+import { SmoothScroll } from "@/components/kinetic/SmoothScroll";
+import { TiltCard } from "@/components/kinetic/TiltCard";
+import { motion, AnimatePresence } from "motion/react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
@@ -103,6 +108,9 @@ function PhotographyLightbox({
   );
 }
 
+/* Varied frame ratios so the contact sheet reads as laid out, not tiled. */
+const GALLERY_RATIOS = ["4 / 5", "1 / 1", "3 / 4", "5 / 4", "2 / 3", "4 / 3"];
+
 export default function PhotographyPage() {
   const photosData = useQuery(api.photos.list, {});
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -143,76 +151,91 @@ export default function PhotographyPage() {
   const isLoading = photosData === undefined;
 
   return (
-    <>
-      <div className="min-h-screen px-6 pt-32 pb-24 md:pt-48 md:pb-36">
-        <div className="mx-auto max-w-[1200px]">
-          <Link
-            href="/#photography"
-            className="mb-8 inline-block text-foreground-muted transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          >
-            &larr; Back
-          </Link>
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-            Photography
-          </h1>
-          <p className="mt-4 max-w-xl text-foreground-muted leading-relaxed">
-            A selection of photos I&apos;ve taken.
-          </p>
-          {isLoading ? (
-            <div className="mt-12 flex justify-center">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-foreground-muted border-t-accent" />
+    <SmoothScroll>
+      <div className="editorial act-ink paper-grain relative min-h-screen">
+        <BroadsheetNav />
+        <main className="px-5 pb-24 pt-24 md:px-10 md:pb-32 md:pt-28">
+          <div className="mx-auto w-full max-w-[1440px]">
+            <div className="h-px w-full bg-foreground" />
+            <div className="flex items-baseline justify-between gap-6 py-3">
+              <Link
+                href="/#stills"
+                className="type-marginalia text-foreground-muted transition-colors hover:text-accent"
+              >
+                &larr; Back to index
+              </Link>
+              <span className="type-marginalia text-foreground-muted">
+                {isLoading ? "—" : `${photos.length} frames`}
+              </span>
             </div>
-          ) : photos.length > 0 ? (
-            <ul
-              className="mt-12 columns-2 gap-3 sm:columns-3 lg:columns-4 md:gap-4 [&>li]:break-inside-avoid [&>li]:mb-3 md:[&>li]:mb-4"
-              role="list"
-            >
-              {photos.map((img, index) => (
-                <li key={img._id}>
-                  <button
-                    type="button"
-                    onClick={() => openLightbox(index)}
-                    className="w-full overflow-hidden rounded-lg border border-border text-left transition-shadow hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                  >
-                    <span
-                      className={`relative block w-full ${
-                        [
-                          "aspect-square",
-                          "aspect-4/3",
-                          "aspect-3/4",
-                          "aspect-5/4",
-                          "aspect-3/2",
-                          "aspect-2/3",
-                        ][index % 6]
-                      }`}
+            <div className="h-px w-full bg-border" />
+
+            <div className="mt-12 flex flex-col justify-between gap-8 md:flex-row md:items-end">
+              <KineticHeading
+                as="h1"
+                text="Contact Sheet"
+                trigger="mount"
+                delay={0.25}
+                className="type-masthead text-foreground"
+                wght={[200, 700]}
+                soft={[100, 16]}
+                wonk={[1, 0]}
+                stride={22}
+              />
+              <p className="type-lede max-w-sm text-foreground-muted">
+                Everything worth keeping, in the order I shot it.
+              </p>
+            </div>
+
+            {isLoading ? (
+              <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {[0, 1, 2, 3, 4, 5].map((index) => (
+                  <div key={index} className="aspect-4/5 w-full animate-pulse bg-background-alt" />
+                ))}
+              </div>
+            ) : photos.length > 0 ? (
+              <ul
+                className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4"
+                role="list"
+              >
+                {photos.map((img, index) => (
+                  <li key={img._id}>
+                    <button
+                      type="button"
+                      onClick={() => openLightbox(index)}
+                      className="group block w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                      aria-label={`Open ${img.alt} in lightbox`}
                     >
-                      <Image
-                        src={img.url}
-                        alt={img.alt}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                        unoptimized
-                        {...(img.blurDataUrl
-                          ? { placeholder: "blur", blurDataURL: img.blurDataUrl }
-                          : {})}
-                      />
-                    </span>
-                    {img.caption && (
-                      <p className="mt-2 px-2 pb-2 text-xs text-foreground-muted line-clamp-2">
-                        {img.caption}
-                      </p>
-                    )}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-8 text-foreground-muted">
-              No photos yet.
-            </p>
-          )}
-        </div>
+                      <TiltCard max={5} glare={false}>
+                        <RevealFigure
+                          src={img.url}
+                          alt={img.alt}
+                          ratio={GALLERY_RATIOS[index % GALLERY_RATIOS.length]}
+                          unoptimized
+                          drift={5}
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        />
+                      </TiltCard>
+                      <span className="type-marginalia mt-2 flex items-baseline justify-between text-foreground-muted">
+                        <span>Frame {String(index + 1).padStart(2, "0")}</span>
+                        <span className="opacity-0 transition-opacity group-hover:opacity-100">
+                          Enlarge
+                        </span>
+                      </span>
+                      {img.caption ? (
+                        <span className="mt-1 block text-sm text-foreground-muted line-clamp-2">
+                          {img.caption}
+                        </span>
+                      ) : null}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-16 text-foreground-muted">No photos yet.</p>
+            )}
+          </div>
+        </main>
       </div>
       <AnimatePresence>
         {lightboxIndex !== null && (
@@ -232,6 +255,6 @@ export default function PhotographyPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </SmoothScroll>
   );
 }

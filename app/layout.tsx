@@ -12,10 +12,15 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+/*
+ * SOFT and WONK are loaded alongside opsz because the Broadsheet design drives
+ * all four axes from scroll position. Without them Fraunces falls back to a
+ * static instance and the kinetic type has nothing to interpolate.
+ */
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
-  axes: ["opsz"],
+  axes: ["SOFT", "WONK", "opsz"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
