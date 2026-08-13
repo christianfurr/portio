@@ -226,7 +226,9 @@ The public site inverts paper→ink mid-scroll. `.act-ink` flips the *same* sema
 
 Variable-font axes (`--fv-wght`, `--fv-soft`, `--fv-wonk`, `--fv-opsz`) are registered via `@property` in globals.css; unregistered custom properties jump instead of interpolating. Fraunces must load `axes: ["SOFT","WONK","opsz"]` in `app/layout.tsx` or there is nothing to animate.
 
-StageLink's card renders `StageLinkMonitor` — an animated low-latency camera-feed demo (StageLink is camera monitoring, not audio). Work cards are `.act-ink` plates on paper, which is what keeps that dark-surface demo reading correctly.
+**Share card + icons** (`app/opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx`) are the same palette rendered by Satori. Satori cannot use `next/font` and **cannot read woff2** — fonts come from `@fontsource/*` `.woff` files via `lib/og-fonts.ts`. It also has no block layout: any element with more than one child needs an explicit `display: flex` or it silently misrenders. Icons paint a paper field rather than sitting on transparent, which is what made the old white-on-transparent favicon vanish on light tab bars.
+
+Work cards are `.act-ink` plates on paper. Each shows its real screenshot inside `DeviceFrame` (browser-window mockup). Project captures are **7680×4320 — exactly 16:9**; frame them at any other ratio and `object-cover` silently crops them. StageLink previously rendered `StageLinkMonitor`, an animated camera-feed demo (StageLink is camera monitoring, not audio); it was dropped when the real screenshot went in — recover with `git show 8ef6133:components/StageLinkMonitor.tsx`.
 
 ## Motion Stack
 

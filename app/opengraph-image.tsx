@@ -1,10 +1,26 @@
 import { ImageResponse } from "next/og";
+import { loadBroadsheetFonts } from "@/lib/og-fonts";
 
 export const alt = "Christian Furr — Full Stack Developer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
+/* Broadsheet palette, mirrored from the .editorial tokens in app/globals.css. */
+const PAPER = "#f2efe9";
+const INK = "#0b0b0c";
+const INK_MUTED = "#56534d";
+const RULE = "#cec7b8";
+const VERMILLION = "#c42b0c";
+
+/*
+ * The share card is the masthead reduced to its frame: heavy rule, mono
+ * marginalia, hairline, display type, and the same rules closing it out. Every
+ * container declares display:flex because Satori has no block layout — a div
+ * with more than one child silently misrenders without it.
+ */
+export default async function OpenGraphImage() {
+  const fonts = await loadBroadsheetFonts();
+
   return new ImageResponse(
     (
       <div
@@ -13,32 +29,105 @@ export default function OpenGraphImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#0a0a0a",
-          color: "#f5f5f7",
-          fontFamily: "ui-sans-serif, system-ui, sans-serif",
+          padding: "56px 64px",
+          backgroundColor: PAPER,
+          color: INK,
+          fontFamily: "Inter",
         }}
       >
-        <div style={{ fontSize: 64, fontWeight: 600, marginBottom: 16 }}>
-          Christian Furr
-        </div>
-        <div style={{ fontSize: 32, color: "#a1a1a6" }}>
-          Full Stack Developer
-        </div>
+        <div style={{ display: "flex", height: 3, backgroundColor: INK }} />
+
         <div
           style={{
-            fontSize: 24,
-            color: "#0a84ff",
-            marginTop: 24,
-            maxWidth: 560,
-            textAlign: "center",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "14px 0",
+            fontFamily: "JetBrains Mono",
+            fontSize: 18,
+            letterSpacing: 3,
+            color: INK_MUTED,
           }}
         >
-          I build real-time systems and beautifully crafted web experiences.
+          <div style={{ display: "flex" }}>PORTFOLIO — ISSUE NO. 01</div>
+          <div style={{ display: "flex" }}>SALT LAKE CITY</div>
         </div>
+
+        <div style={{ display: "flex", height: 1, backgroundColor: RULE }} />
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "Fraunces",
+              fontWeight: 700,
+              fontSize: 108,
+              lineHeight: 1,
+              letterSpacing: -3,
+            }}
+          >
+            Christian Furr
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              marginTop: 14,
+              fontFamily: "Fraunces",
+              fontWeight: 400,
+              fontSize: 52,
+              lineHeight: 1,
+              letterSpacing: -1,
+              color: VERMILLION,
+            }}
+          >
+            Full Stack Developer
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              marginTop: 32,
+              maxWidth: 720,
+              fontSize: 27,
+              lineHeight: 1.45,
+              color: INK_MUTED,
+            }}
+          >
+            I build real-time systems and beautifully crafted web experiences.
+          </div>
+        </div>
+
+        <div style={{ display: "flex", height: 1, backgroundColor: RULE }} />
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "14px 0",
+            fontFamily: "JetBrains Mono",
+            fontSize: 18,
+            letterSpacing: 3,
+            color: INK_MUTED,
+          }}
+        >
+          <div style={{ display: "flex" }}>CHRISTIANFURR.DEV</div>
+          <div style={{ display: "flex", color: VERMILLION }}>
+            AVAILABLE FOR WORK
+          </div>
+        </div>
+
+        <div style={{ display: "flex", height: 3, backgroundColor: INK }} />
       </div>
     ),
-    { ...size }
+    { ...size, fonts },
   );
 }
